@@ -12,6 +12,6 @@ matplotlib
 
 - Run the file a_star_sarin_aditi.py to generate the nodes and paths through A-star Algorithm
 - Provide your input and goal states with x-coordinate, y-coordinate and the orientation (-60deg, -30deg, 0deg, 30deg and 60deg) 
-- Also input your mobile robot size (1 to 10)
+- Also input the step size for your mobile robot (Choose from 1 to 10)
 
 GitHub Link: https://github.com/sarinann/A-star-algorithm-for-obstcle-avoidance.git
