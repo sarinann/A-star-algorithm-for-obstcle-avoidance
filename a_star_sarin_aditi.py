@@ -173,7 +173,7 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
                 print("Goal has been reached!!!!")
 
             nodes_to_explore = 5
-            
+
             for node in range(nodes_to_explore):
 
                 generate_new_node = actions_to_take(step_size, theta_ini)
@@ -191,9 +191,12 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
                 nodeok = Obstacle_space(node_pose[0], node_pose[1], node_pose[2])
 
                 if nodeok == False:
-                    if  zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]==0:
-                        zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]=1
-                        final_new_node = (total_cost, node_pose, parent_node)
+                    # if  zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]==0:
+                    #     zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]=1
+                    final_new_node = (total_cost, node_pose, parent_node)
+                    
+                    if node_pose not in close_list:
+
                         heapq.heappush(open_list, final_new_node)
                     else:
                         continue
