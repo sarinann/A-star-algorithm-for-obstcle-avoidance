@@ -100,6 +100,15 @@ def dijkstra_node_create(cost, parent, node):
 #     passed_node = dijkstra_node_create(cost, parent_node, modified_node)
 #     return passed_node
 
+
+
+# def move_plus_thirty(node, step_size, theta):
+
+#     action = (step_size* np.cos(np.deg2rad(theta+30)), step_size* np.sin(np.deg2rad(theta+30)), (theta+30))
+
+#     modified_node = copy.deepcopy(node)
+
+
 start_point_x = input("Enter the x-coordinate of the start point \n")
 start_point_y = input("Enter the y-coordinate of the start point \n")
 start_orien = input("Define the initial orientation in degrees - Options: -60,-30, 0, 30, 60")
@@ -123,7 +132,6 @@ while Obstacle_space(goal[0], goal[1], goal[2] ):
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
     goal= (int(goal_point_x), int(goal_point_y))
 
-
 def actions_to_take (step_size, theta):
     actions = [[step_size* np.cos(np.deg2rad(theta+0)), step_size* np.sin(np.deg2rad(theta+0)), (theta+0)],
                [step_size* np.cos(np.deg2rad(theta+30)), step_size* np.sin(np.deg2rad(theta+30)), (theta+30)],
@@ -132,11 +140,12 @@ def actions_to_take (step_size, theta):
                [step_size* np.cos(np.deg2rad(theta-60)), step_size* np.sin(np.deg2rad(theta-60)), (theta-60)]]
     return actions
 
-def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, thre):
+def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size1, thre):
 
     d_ini_c2c = np.sqrt((goal_node[0]-start_node[0])**2 + (goal_node[1]-start_node[1])**2 )
 
     zeros = np.zeros((int(400/thre),int(250/thre),10))
+
     start_pose = (d_ini_c2c, start_node, None)
     goal_pose = (0, goal_node, None)
 
@@ -150,8 +159,8 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
 
     close_list = []
 
-    lowest_c2c = []
-    lowest_c2c.append(start_pose)
+    # lowest_c2c = []
+    # lowest_c2c.append(start_pose)
 
     while len(open_list) > 0:
 
@@ -169,14 +178,14 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
 
             distance_to_goal = np.sqrt((goal_node[0] - current_node[1][0])**2 + (goal_node[1] - current_node[1][1])**2)
 
-            if distance_to_goal <= int(step_size*1.5):
+            if distance_to_goal <= int(5*1.5):
                 print("Goal has been reached!!!!")
 
             nodes_to_explore = 5
 
             for node in range(nodes_to_explore):
 
-                generate_new_node = actions_to_take(step_size, theta_ini)
+                generate_new_node = actions_to_take(5, theta_ini)
 
                 node_pose = ((current_node[1][0] + generate_new_node[node][0]) , (current_node[1][1] + generate_new_node[node][1]), (generate_new_node[node][2]))
 
@@ -191,11 +200,10 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
                 nodeok = Obstacle_space(node_pose[0], node_pose[1], node_pose[2])
 
                 if nodeok == False:
-                    # if  zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]==0:
-                    #     zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]=1
-                    final_new_node = (total_cost, node_pose, parent_node)
-                    
-                    if node_pose not in close_list:
+                    if  zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]==0:
+                        zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]=1
+                        final_new_node = (total_cost, node_pose, parent_node)
+                    # if node_pose not in close_list:
 
                         heapq.heappush(open_list, final_new_node)
                     else:
@@ -204,6 +212,6 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
         heapq.heappop(open_list)       
 
 
-path = astar_algorithm(start, goal, 5, 5, step_size, 5)
+path = astar_algorithm(start, goal, 5, 5, 5, 5)
 
 print(path)

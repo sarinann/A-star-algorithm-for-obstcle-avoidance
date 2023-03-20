@@ -43,6 +43,8 @@ def Obstacle_space(x, y):
         return True
     else:
         return False
+    
+
 
 def dijkstra_node_create(cost, parent, node):
     return (cost, parent, node)
