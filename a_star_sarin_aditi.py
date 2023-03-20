@@ -7,11 +7,12 @@ import time
 import copy
 import numpy as np
 from math import dist
-start = (20, 20, 0)
-goal = (50, 25, 30)
+start = (40, 30, 0)
+goal = (580,20, 30)
 goal_x = goal[0]
 goal_y = goal[1]
 start_time = time.time()
+threshold = 0.5
 
 #Defining the four walls. The point should lie within the boundary
 def Main_Wall(x, y, theta):
@@ -50,7 +51,7 @@ def Obstacle_space(x, y, theta):
     else:
         return False
 
-def dijkstra_node_create(total_cost, cost_to_come, parent, node):
+def a_star_node_create(total_cost, cost_to_come, parent, node):
     return (total_cost,cost_to_come, parent, node)
 
 step_size = 5
@@ -63,14 +64,16 @@ def ActionMove_neg60(node):
     modi_theta = (parent_node[2] - 60) % 360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
-
+    modi_theta = rounded_value(modi_theta)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
 
-    cost_to_go = dist((modi_x, modi_x), (goal_x, goal_y))
+    cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = cost + cost_to_go
 
-    passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
+    passed_node = a_star_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
 
 def ActionMove_neg30(node):
@@ -81,14 +84,16 @@ def ActionMove_neg30(node):
     modi_theta = (parent_node[2] - 30) % 360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
-
+    modi_theta = rounded_value(modi_theta)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
 
-    cost_to_go = dist((modi_x, modi_x), (goal_x, goal_y))
+    cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = cost + cost_to_go
 
-    passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
+    passed_node = a_star_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
 
 def ActionMove_zero(node):
@@ -99,14 +104,16 @@ def ActionMove_zero(node):
     modi_theta = (parent_node[2]) % 360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
-
+    modi_theta = rounded_value(modi_theta)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
 
-    cost_to_go = dist((modi_x, modi_x), (goal_x, goal_y))
+    cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = cost + cost_to_go
 
-    passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
+    passed_node = a_star_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
 
 
@@ -118,17 +125,18 @@ def ActionMove_pos30(node):
     modi_theta = (parent_node[2] + 30) %360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
-
+    modi_theta = rounded_value(modi_theta)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
 
-    cost_to_go = dist((modi_x, modi_x), (goal_x, goal_y))
+    cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = cost + cost_to_go
 
-    passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
+    passed_node = a_star_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
 
-    
 def ActionMove_pos60(node):
     modified_node = copy.deepcopy(node)
     cost = modified_node[1]+1
@@ -137,15 +145,22 @@ def ActionMove_pos60(node):
     modi_theta = (parent_node[2] + 60) % 360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
-
+    modi_theta = rounded_value(modi_theta)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
 
-    cost_to_go = dist((modi_x, modi_x), (goal_x, goal_y))
+    cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = cost + cost_to_go
 
-    passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
+    passed_node = a_star_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
+
+def rounded_value(input):
+    if input % 0.5 !=0:
+        input = (np.round(input/threshold))*threshold
+    return input
 
 step = 5
 
@@ -159,12 +174,17 @@ while Obstacle_space(goal[0], goal[1], goal[2]):
 
 def Astar_algoritm(start, goal):
 
-    initial_cost = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2 )
+    initial_cost_to_go = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2 )
+
+    initial_cost = initial_cost_to_go + 0
+
     zeros = np.zeros((int(600/0.5),int(250/0.5),12))
-    start_pose = dijkstra_node_create(initial_cost, 0, None, start)
+
+    start_pose = a_star_node_create(initial_cost, 0, None, start)
 
     open_list = PriorityQueue()
     open_list.put(start_pose)
+
     all_x_visited =[]
     all_y_visited =[]
     close_list = {}
@@ -199,7 +219,6 @@ def Astar_algoritm(start, goal):
             return generated_path[::-1], all_x_visited, all_y_visited
 
         
-# dijkstra_node_create
         actions = [ActionMove_neg60, ActionMove_neg30, ActionMove_zero, ActionMove_pos30, ActionMove_pos60]
         for action in actions:
             #Get the modified node and its cost to move from current node
@@ -215,6 +234,8 @@ def Astar_algoritm(start, goal):
                                 if open_list.queue[i][3] == child_node[3] and open_list.queue[i][0] > total_cost:
                                     open_list.queue[i][2] = child_node[2]
                             open_list.put(child_node)
+                            all_x_visited.append(child_node[3][0]) 
+                            all_y_visited.append(child_node[3][1])
                     # cost_from_start[new_node[2]] = float('inf')
     return None
      
@@ -272,14 +293,14 @@ y_temp = 0
 
 for j in range(len(x_visited)):
             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
-            plt.pause(0.0005)
+            plt.pause(0.005)
             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
                 break
 
 plt.title("The shortest Path travelled by the point robot")
 for i in range(len(path_x_coord)):
-    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='yellow' , s=2, marker='D')
-    plt.pause(0.0005)
+    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='blue' , s=2, marker='D')
+    plt.pause(0.005)
 plt.waitforbuttonpress(timeout=-1)
 plt.show
 
