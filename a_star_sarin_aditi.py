@@ -7,11 +7,12 @@ import time
 import copy
 import numpy as np
 from math import dist
-start = (10, 10, 0)
-goal = (10, 20, 0)
+start = (20, 20, 0)
+goal = (50, 25, 30)
 goal_x = goal[0]
 goal_y = goal[1]
 start_time = time.time()
+
 #Defining the four walls. The point should lie within the boundary
 def Main_Wall(x, y, theta):
     if (x <= 5) or (x >= 595) or (y <= 5) or (y >= 245):
@@ -51,7 +52,6 @@ def Obstacle_space(x, y, theta):
 
 def dijkstra_node_create(total_cost, cost_to_come, parent, node):
     return (total_cost,cost_to_come, parent, node)
-
 
 step_size = 5
 # Defining the movements: up. left. right, down, up left, up right, down left and down right   
@@ -132,9 +132,9 @@ def ActionMove_pos30(node):
 def ActionMove_pos60(node):
     modified_node = copy.deepcopy(node)
     cost = modified_node[1]+1
-    parent_node = modified_node[3] + 60
+    parent_node = modified_node[3]
 
-    modi_theta = (parent_node[2]) % 360
+    modi_theta = (parent_node[2] + 60) % 360
     modi_x = parent_node[0] + (step_size*np.cos(np.radians(modi_theta)))
     modi_y = parent_node[1] + (step_size*np.sin(np.radians(modi_theta)))
 
@@ -147,37 +147,6 @@ def ActionMove_pos60(node):
     passed_node = dijkstra_node_create(total_cost, cost, parent_node, modified_node)
     return passed_node
 
-
-
-
-# def move_plus_thirty(node, step_size, theta):
-
-#     action = (step_size* np.cos(np.deg2rad(theta+30)), step_size* np.sin(np.deg2rad(theta+30)), (theta+30))
-
-#     modified_node = copy.deepcopy(node)
-
-# start_point_x = input("Enter the x-coordinate of the start point \n")
-# start_point_y = input("Enter the y-coordinate of the start point \n")
-# start_orien = input("Define the initial orientation in degrees - Options: -60,-30, 0, 30, 60")
-# step_size = input("Enter the step size for the robot. Choose from 1 to 10")
-# start= (int(start_point_x), int(start_point_y), float(start_orien))
-# print(type(start))
-# while Obstacle_space(start[0], start[1], start[2]):
-#     print("These coordinates lie inside the obstacle space. Please enter new values\n")
-#     start_point_x = input("Enter the x-coordinate of the start point \n")
-#     start_point_y = input("Enter the y-coordinate of the start point \n")
-#     start_orien = input("Define the initial orientation in degrees - Options: -60,-30, 0, 30, 60")
-#     start= (int(start_point_x), int(start_point_y), float(start_orien))
-
-# goal_point_x = input("Enter the x-coordinate of the goal point \n")
-# goal_point_y = input("Enter the y-coordinate of the goal point \n")
-# goal_orien = input("Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
-# goal= (int(goal_point_x), int(goal_point_y), float(goal_orien))
-# print(type(goal))
-start = (10, 10, 0)
-
-goal = (10, 20, 0)
-
 step = 5
 
 
@@ -188,106 +157,11 @@ while Obstacle_space(goal[0], goal[1], goal[2]):
     goal_orien = input("Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
     goal= (int(goal_point_x), int(goal_point_y), float(goal_orien))
 
-# def actions_to_take (step_size, theta):
-#     actions = [[step_size* np.cos(np.deg2rad(theta+0)), step_size* np.sin(np.deg2rad(theta+0)), (theta+0)],
-#                [step_size* np.cos(np.deg2rad(theta+30)), step_size* np.sin(np.deg2rad(theta+30)), (theta+30)],
-#                [step_size* np.cos(np.deg2rad(theta-30)), step_size* np.sin(np.deg2rad(theta-30)), (theta-30)],
-#                [step_size* np.cos(np.deg2rad(theta+60)), step_size* np.sin(np.deg2rad(theta+60)), (theta+60)],
-#                [step_size* np.cos(np.deg2rad(theta-60)), step_size* np.sin(np.deg2rad(theta-60)), (theta-60)]]
-#     return actions
-
-# def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size1, thre):
-
-#     d_ini_c2g = np.sqrt((goal_node[0]-start_node[0])**2 + (goal_node[1]-start_node[1])**2 )
-#     # c2c = 0
-#     zeros = np.zeros((int(400/thre),int(250/thre),10))
-
-#     start_pose = (d_ini_c2g, start_node, None)
-#     goal_pose = (0, goal_node, None)
-
-#     theta_ini = 0
-
-#     five_small_nodes = []
-#     five_small_nodes.append(start_pose)
-
-#     open_list = []
-#     open_list.append(start_pose)
-
-#     close_list = []
-
-#     # lowest_c2c = []
-#     # lowest_c2c.append(start_pose)
-
-#     while len(open_list) > 0:
-
-#         five_small_nodes = heapq.nsmallest(1, open_list)
-
-#         for i in five_small_nodes:
-
-#             current_node = i
-
-#             theta = current_node[1][2]
-#             close_list.append(current_node)
-
-#             # print(type(goal_node))
-#             # print(type(current_node))
-
-#             distance_to_goal = np.sqrt((goal_node[0] - current_node[1][0])**2 + (goal_node[1] - current_node[1][1])**2)
-
-#             if distance_to_goal <= int(5*1.5):
-#                 print("Goal has been reached!!!!")
-
-#             nodes_to_explore = 5
-
-#             for node in range(nodes_to_explore):
-
-#                 generate_new_node = actions_to_take(5, theta)
-
-#                 node_pose = ((current_node[1][0] + generate_new_node[node][0]) , (current_node[1][1] + generate_new_node[node][1]), (generate_new_node[node][2]))
-
-#                 parent_node = current_node[2]
-
-#                 c2g = np.sqrt((goal_node[0] - node_pose[0])**2 - (goal_node[1] - node_pose[1])**2)
-
-#                 if parent_node is None:
-#                     c2c = 0
-#                     total_cost = c2g
-#                 else:
-
-#                     c2c = np.sqrt((parent_node[0] - node_pose[0])**2 - (parent_node[1] - node_pose[1])**2)
-#                     total_cost = c2c + c2g
-
-
-#                 # total_cost = int(c2c + c2g)
-
-#                 nodeok = Obstacle_space(node_pose[0], node_pose[1], node_pose[2])
-
-#                 if nodeok == False:
-#                     if  zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]==0:
-#                         zeros[int(node_pose[0]/thre)][int(node_pose[1]/thre)][int(node_pose[2]/30)]=1
-#                         final_new_node = (total_cost, node_pose, parent_node)
-#                     # if node_pose not in close_list:
-
-#                         heapq.heappush(open_list, final_new_node)
-#                     else:
-#                         continue
-
-#         heapq.heappop(open_list)   
-#     return close_list    
-
-# path = astar_algorithm(start, goal, 5, 5, 5, 5)
-
-# print(path)
-
-
-def Astar_algoritm(start, goal, step, clearance, robot_radius):
+def Astar_algoritm(start, goal):
 
     initial_cost = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2 )
-    zeros = np.zeros((int(600/0.5),int(250/0.5),10))
+    zeros = np.zeros((int(600/0.5),int(250/0.5),12))
     start_pose = dijkstra_node_create(initial_cost, 0, None, start)
-    # goal_pose = (0, goal, None)
-
-    # theta_ini = 0
 
     open_list = PriorityQueue()
     open_list.put(start_pose)
@@ -310,9 +184,12 @@ def Astar_algoritm(start, goal, step, clearance, robot_radius):
         # visited_closed_dict[present_node[2]] = (present_node[1]) 
         close_list[current_node[3]] = current_node[2]   
 
-        # Check if we have reached the goal coordinates
-        if current_node[3] == goal:
-            #return the path by backtracking from goal to start
+        theta = current_node[3][2]
+
+        distance_to_goal = np.sqrt((goal[0] - current_node[3][0])**2 + (goal[1] - current_node[3][1])**2)
+
+        if distance_to_goal <= 1.5:
+            print("Goal has been reached!!!!")
             generated_path = []
             current_pose = current_node[3] 
             while current_pose is not None:
@@ -321,35 +198,90 @@ def Astar_algoritm(start, goal, step, clearance, robot_radius):
             #Reverse the path and return
             return generated_path[::-1], all_x_visited, all_y_visited
 
-        theta = current_node[3][2]
-
-        distance_to_goal = np.sqrt((goal[0] - current_node[3][0])**2 + (goal[1] - current_node[3][1])**2)
-
-        if distance_to_goal <= int(5*1.5):
-            print("Goal has been reached!!!!")
-
         
 # dijkstra_node_create
         actions = [ActionMove_neg60, ActionMove_neg30, ActionMove_zero, ActionMove_pos30, ActionMove_pos60]
         for action in actions:
             #Get the modified node and its cost to move from current node
-            new_node = action(current_node)                        
+            child_node = action(current_node)     
+            new_node = child_node[3]                   
                 #If the node is not in the cost dictionary, add it with infinite cost
             if zeros[int(new_node[0]/0.5)][int(new_node[1]/0.5)][int(new_node[2]/30)]==0:
                     zeros[int(new_node[0]/0.5)][int(new_node[1]/0.5)][int(new_node[2]/30)]=1
-                    if Obstacle_space(new_node[3][0], new_node[3][1], theta) == False:
-                        total_cost = new_node[0]
-                        if new_node[3] not in close_list:
+                    if Obstacle_space(new_node[0], new_node[1], theta) == False:
+                        total_cost = child_node[0]
+                        if child_node[3] not in close_list:
                             for i in range(0,(open_list.qsize())):
-                                if open_list.queue[i][3] == new_node[3] and open_list.queue[i][0] > total_cost:
-                                    open_list.queue[i][2] == new_node[2]
-                            open_list.put(new_node)
+                                if open_list.queue[i][3] == child_node[3] and open_list.queue[i][0] > total_cost:
+                                    open_list.queue[i][2] = child_node[2]
+                            open_list.put(child_node)
                     # cost_from_start[new_node[2]] = float('inf')
-            
-# generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
-# end_time = time.time()
-# print("Reached Goal")
+    return None
+     
+generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
+# print(y)
 
+end_time = time.time()
+# print(generated_path)
+print("Reached Goal")
+
+print(f'Time taken to solve using the Dijkstra algorithm: {end_time - start_time}\n')
+
+path_x_coord = [] 
+path_y_coord = []
+for i in range(len(generated_path)):
+    path_x_coord.append(generated_path[i][0])
+    path_y_coord.append(generated_path[i][1])
+
+fig, ax = plt.subplots(figsize=(6,2.5))
+Triangle = patch.Polygon([(460, 25), (460, 225), (510, 125)], linewidth=1, edgecolor='r', facecolor='r')
+Rectangle_Bottom = patch.Rectangle((100, 150), 50, 100, linewidth=1, edgecolor='r', facecolor='r')
+Rectangle_Top = patch.Rectangle((100, 0), 50, 100, linewidth=1, edgecolor='r', facecolor='r')
+Hexagon = patch.RegularPolygon((300, 125), 6, 75, linewidth=1, edgecolor='r', facecolor='r')
+#Plotting the obstacles
+ax.add_patch(Triangle)
+ax.add_patch(Rectangle_Bottom)
+ax.add_patch(Rectangle_Top)
+ax.add_patch(Hexagon)
+
+#Plotting the path
+plt.xlabel('X-Axis')
+plt.ylabel('Y-Axis')
+plt.title("Visualizing Explored Nodes through Dijkstra Algorithm")
+plt.axis([0 , 600 , 0 ,250])
+
+x_temp = 0
+y_temp = 0
+
+# for i in range(len(x_visited)) :
+#     if x_temp == goal[0] and y_temp == goal[1] :
+#         break
+#     if len(x_visited)>100:
+#         plt.scatter(x_visited[0:100] , y_visited[0:100] , c='blue' , s=1)
+#         plt.pause(0.0005)
+#         del x_visited[:100]
+#         del y_visited[:100]
+#     else :
+#         for j in range(len(x_visited)):
+#             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
+#             plt.pause(0.0005)
+#             x_temp = x_visited[j]
+#             y_temp = y_visited[j]
+#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+#                 break
+
+for j in range(len(x_visited)):
+            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
+            plt.pause(0.0005)
+            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+                break
+
+plt.title("The shortest Path travelled by the point robot")
+for i in range(len(path_x_coord)):
+    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='yellow' , s=2, marker='D')
+    plt.pause(0.0005)
+plt.waitforbuttonpress(timeout=-1)
+plt.show
 
 
 
