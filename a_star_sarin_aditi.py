@@ -124,12 +124,12 @@ while Obstacle_space(goal[0], goal[1], goal[2] ):
     goal= (int(goal_point_x), int(goal_point_y))
 
 
-def actions_to_take (d, theta):
-    actions = [[d * np.cos(np.deg2rad(theta+0)), d * np.sin(np.deg2rad(theta+0)), (theta+0)],
-               [d * np.cos(np.deg2rad(theta+30)), d * np.sin(np.deg2rad(theta+30)), (theta+30)],
-               [d * np.cos(np.deg2rad(theta-30)), d * np.sin(np.deg2rad(theta-30)), (theta-30)],
-               [d * np.cos(np.deg2rad(theta+60)), d * np.sin(np.deg2rad(theta+60)), (theta+60)],
-               [d * np.cos(np.deg2rad(theta-60)), d * np.sin(np.deg2rad(theta-60)), (theta-60)]]
+def actions_to_take (step_size, theta):
+    actions = [[step_size* np.cos(np.deg2rad(theta+0)), step_size* np.sin(np.deg2rad(theta+0)), (theta+0)],
+               [step_size* np.cos(np.deg2rad(theta+30)), step_size* np.sin(np.deg2rad(theta+30)), (theta+30)],
+               [step_size* np.cos(np.deg2rad(theta-30)), step_size* np.sin(np.deg2rad(theta-30)), (theta-30)],
+               [step_size* np.cos(np.deg2rad(theta+60)), step_size* np.sin(np.deg2rad(theta+60)), (theta+60)],
+               [step_size* np.cos(np.deg2rad(theta-60)), step_size* np.sin(np.deg2rad(theta-60)), (theta-60)]]
     return actions
 
 def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, thre):
@@ -173,6 +173,7 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size, t
                 print("Goal has been reached!!!!")
 
             nodes_to_explore = 5
+            
             for node in range(nodes_to_explore):
 
                 generate_new_node = actions_to_take(step_size, theta_ini)
