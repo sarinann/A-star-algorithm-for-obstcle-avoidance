@@ -6,9 +6,11 @@ from queue import PriorityQueue
 import time
 import copy
 import numpy as np
-import heapq
 from math import dist
-
+start = (10, 10, 0)
+goal = (10, 20, 0)
+goal_x = goal[0]
+goal_y = goal[1]
 start_time = time.time()
 #Defining the four walls. The point should lie within the boundary
 def Main_Wall(x, y, theta):
@@ -47,8 +49,8 @@ def Obstacle_space(x, y, theta):
     else:
         return False
 
-def dijkstra_node_create(cost, cost_to_come, parent, node):
-    return (cost,cost_to_come, parent, node)
+def dijkstra_node_create(total_cost, cost_to_come, parent, node):
+    return (total_cost,cost_to_come, parent, node)
 
 
 step_size = 5
@@ -281,49 +283,72 @@ while Obstacle_space(goal[0], goal[1], goal[2]):
 def Astar_algoritm(start, goal, step, clearance, robot_radius):
 
     initial_cost = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2 )
-    
-    start_pose = (initial_cost, start, None)
-    goal_pose = (0, goal, None)
+    zeros = np.zeros((int(600/0.5),int(250/0.5),10))
+    start_pose = dijkstra_node_create(initial_cost, 0, None, start)
+    # goal_pose = (0, goal, None)
 
     # theta_ini = 0
 
     open_list = PriorityQueue()
     open_list.put(start_pose)
-
+    all_x_visited =[]
+    all_y_visited =[]
     close_list = {}
 
     while not open_list.empty():
 
         current_node = open_list.get()
 
-        modi_current_node = copy.deepcopy(current_node)
+        # modi_current_node = copy.deepcopy(current_node)
 
-        if modi_current_node[1] in close_list:
+        if current_node[3] in close_list:
             continue
 
-        close_list[modi_current_node[1]] = modi_current_node[2]
+        all_x_visited.append(current_node[3][0]) 
+        all_y_visited.append(current_node[3][1])
 
-        theta = modi_current_node[1][2]
+        # visited_closed_dict[present_node[2]] = (present_node[1]) 
+        close_list[current_node[3]] = current_node[2]   
 
-        distance_to_goal = np.sqrt((goal[0] - modi_current_node[1][0])**2 + (goal[1] - modi_current_node[1][1])**2)
+        # Check if we have reached the goal coordinates
+        if current_node[3] == goal:
+            #return the path by backtracking from goal to start
+            generated_path = []
+            current_pose = current_node[3] 
+            while current_pose is not None:
+                generated_path.append(current_pose)
+                current_pose = close_list[current_pose]
+            #Reverse the path and return
+            return generated_path[::-1], all_x_visited, all_y_visited
+
+        theta = current_node[3][2]
+
+        distance_to_goal = np.sqrt((goal[0] - current_node[3][0])**2 + (goal[1] - current_node[3][1])**2)
 
         if distance_to_goal <= int(5*1.5):
             print("Goal has been reached!!!!")
 
-        nodes_to_explore = 5
-
-        for node in range(nodes_to_explore):
-
-            present_node = actions_to_take(step, theta)
-
-            node_pose = ((modi_current_node[1][0] + present_node[node][0]) , (modi_current_node[1][1] + present_node[node][1]), (present_node[node][2]))
-
-            node_ok = Obstacle_space(node_pose[0], node_pose[1], node_pose[2])
-
-            if 
-
+        
+# dijkstra_node_create
+        actions = [ActionMove_neg60, ActionMove_neg30, ActionMove_zero, ActionMove_pos30, ActionMove_pos60]
+        for action in actions:
+            #Get the modified node and its cost to move from current node
+            new_node = action(current_node)                        
+                #If the node is not in the cost dictionary, add it with infinite cost
+            if zeros[int(new_node[0]/0.5)][int(new_node[1]/0.5)][int(new_node[2]/30)]==0:
+                    zeros[int(new_node[0]/0.5)][int(new_node[1]/0.5)][int(new_node[2]/30)]=1
+                    if Obstacle_space(new_node[3][0], new_node[3][1], theta) == False:
+                        total_cost = new_node[0]
+                        if new_node[3] not in close_list:
+                            for i in range(0,(open_list.qsize())):
+                                if open_list.queue[i][3] == new_node[3] and open_list.queue[i][0] > total_cost:
+                                    open_list.queue[i][2] == new_node[2]
+                            open_list.put(new_node)
+                    # cost_from_start[new_node[2]] = float('inf')
             
-
+# generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
+# end_time = time.time()
+# print("Reached Goal")
 
 
 
