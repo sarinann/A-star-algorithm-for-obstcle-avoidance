@@ -108,7 +108,6 @@ def dijkstra_node_create(cost, parent, node):
 
 #     modified_node = copy.deepcopy(node)
 
-
 start_point_x = input("Enter the x-coordinate of the start point \n")
 start_point_y = input("Enter the y-coordinate of the start point \n")
 start_orien = input("Define the initial orientation in degrees - Options: -60,-30, 0, 30, 60")
@@ -119,18 +118,21 @@ while Obstacle_space(start[0], start[1], start[2]):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     start_point_x = input("Enter the x-coordinate of the start point \n")
     start_point_y = input("Enter the y-coordinate of the start point \n")
-    start= (int(start_point_x), int(start_point_y))
+    start_orien = input("Define the initial orientation in degrees - Options: -60,-30, 0, 30, 60")
+    start= (int(start_point_x), int(start_point_y), float(start_orien))
 
 goal_point_x = input("Enter the x-coordinate of the goal point \n")
 goal_point_y = input("Enter the y-coordinate of the goal point \n")
 goal_orien = input("Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
 goal= (int(goal_point_x), int(goal_point_y), float(goal_orien))
-print(type(goal))
-while Obstacle_space(goal[0], goal[1], goal[2] ):
+# print(type(goal))
+
+while Obstacle_space(goal[0], goal[1], goal[2]):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     goal_point_x = input("Enter the x-coordinate of the goal point \n")
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
-    goal= (int(goal_point_x), int(goal_point_y))
+    goal_orien = input("Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
+    goal= (int(goal_point_x), int(goal_point_y), float(goal_orien))
 
 def actions_to_take (step_size, theta):
     actions = [[step_size* np.cos(np.deg2rad(theta+0)), step_size* np.sin(np.deg2rad(theta+0)), (theta+0)],
@@ -142,11 +144,11 @@ def actions_to_take (step_size, theta):
 
 def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size1, thre):
 
-    d_ini_c2c = np.sqrt((goal_node[0]-start_node[0])**2 + (goal_node[1]-start_node[1])**2 )
-
+    d_ini_c2g = np.sqrt((goal_node[0]-start_node[0])**2 + (goal_node[1]-start_node[1])**2 )
+    # c2c = 0
     zeros = np.zeros((int(400/thre),int(250/thre),10))
 
-    start_pose = (d_ini_c2c, start_node, None)
+    start_pose = (d_ini_c2g, start_node, None)
     goal_pose = (0, goal_node, None)
 
     theta_ini = 30
@@ -191,11 +193,18 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size1, 
 
                 parent_node = current_node[2]
 
-                c2c = np.sqrt((goal_node[0] - node_pose[0])**2 - (goal_node[1] - node_pose[1])**2)
+                c2g = np.sqrt((goal_node[0] - node_pose[0])**2 - (goal_node[1] - node_pose[1])**2)
 
-                c2g = np.sqrt((parent_node[0] - node_pose[0])**2 - (parent_node[1] - node_pose[1])**2)
+                if parent_node is None:
+                    c2c = 0
+                    total_cost = c2g
+                else:
 
-                total_cost = int(c2c + c2g)
+                    c2c = np.sqrt((parent_node[0] - node_pose[0])**2 - (parent_node[1] - node_pose[1])**2)
+                    total_cost = c2c + c2g
+
+
+                # total_cost = int(c2c + c2g)
 
                 nodeok = Obstacle_space(node_pose[0], node_pose[1], node_pose[2])
 
@@ -209,8 +218,8 @@ def astar_algorithm(start_node, goal_node, clearance, robot_radius, step_size1, 
                     else:
                         continue
 
-        heapq.heappop(open_list)       
-
+        heapq.heappop(open_list)   
+    return close_list    
 
 path = astar_algorithm(start, goal, 5, 5, 5, 5)
 
