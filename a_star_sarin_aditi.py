@@ -76,12 +76,14 @@ while Obstacle_space(goal[0], goal[1], goal[2]):
     goal_point_orien = input("Enter the goal orientation \n")
     goal= (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
 
+step_size = int(input("Enter the stepsize \n"))
+
 
 goal_x = goal[0]
 goal_y = goal[1]
 
 
-step_size = 5
+# step_size = 5
 # Defining the movements: up. left. right, down, up left, up right, down left and down right   
 def ActionMove_neg60(node):
     modified_node = copy.deepcopy(node)
