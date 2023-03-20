@@ -7,10 +7,10 @@ import time
 import copy
 import numpy as np
 from math import dist
-start = (40, 30, 0)
-goal = (580,20, 30)
-goal_x = goal[0]
-goal_y = goal[1]
+# start = (90, 90, 0)
+# goal = (400,20, 30)
+# goal_x = goal[0]
+# goal_y = goal[1]
 start_time = time.time()
 threshold = 0.5
 
@@ -53,6 +53,33 @@ def Obstacle_space(x, y, theta):
 
 def a_star_node_create(total_cost, cost_to_come, parent, node):
     return (total_cost,cost_to_come, parent, node)
+    
+start_point_x = input("Enter the x-coordinate of the start point \n")
+start_point_y = input("Enter the y-coordinate of the start point \n")
+start_point_theta = input("Enter the start orientation \n")
+start= (int(start_point_x), int(start_point_y), int(start_point_theta))
+while Obstacle_space(start[0], start[1], start[2]):
+    print("These coordinates lie inside the obstacle space. Please enter new values\n")
+    start_point_x = input("Enter the x-coordinate of the start point \n")
+    start_point_y = input("Enter the y-coordinate of the start point \n")
+    start_point_theta = input("Enter the start orientation \n")
+    start= (int(start_point_x), int(start_point_y), int(start_point_theta))
+
+goal_point_x = input("Enter the x-coordinate of the goal point \n")
+goal_point_y = input("Enter the y-coordinate of the goal point \n")
+goal_point_orien = input("Enter the goal orientation \n")
+goal= (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
+while Obstacle_space(goal[0], goal[1], goal[2]):
+    print("These coordinates lie inside the obstacle space. Please enter new values\n")
+    goal_point_x = input("Enter the x-coordinate of the goal point \n")
+    goal_point_y = input("Enter the y-coordinate of the goal point \n")
+    goal_point_orien = input("Enter the goal orientation \n")
+    goal= (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
+
+
+goal_x = goal[0]
+goal_y = goal[1]
+
 
 step_size = 5
 # Defining the movements: up. left. right, down, up left, up right, down left and down right   
