@@ -303,32 +303,32 @@ plt.axis([0 , 600 , 0 ,250])
 x_temp = 0
 y_temp = 0
 
-# for i in range(len(x_visited)) :
-#     if x_temp == goal[0] and y_temp == goal[1] :
-#         break
-#     if len(x_visited)>100:
-#         plt.scatter(x_visited[0:100] , y_visited[0:100] , c='blue' , s=1)
-#         plt.pause(0.0005)
-#         del x_visited[:100]
-#         del y_visited[:100]
-#     else :
-#         for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
-#             plt.pause(0.0005)
-#             x_temp = x_visited[j]
-#             y_temp = y_visited[j]
-#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
-#                 break
-
-for j in range(len(x_visited)):
-            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
-            plt.pause(0.005)
+for i in range(len(x_visited)) :
+    if x_temp == goal[0] and y_temp == goal[1] :
+        break
+    if len(x_visited)>100:
+        plt.scatter(x_visited[0:100] , y_visited[0:100] , c='blue' , s=1)
+        plt.pause(0.0005)
+        del x_visited[:100]
+        del y_visited[:100]
+    else :
+        for j in range(len(x_visited)):
+            plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
+            plt.pause(0.0005)
+            x_temp = x_visited[j]
+            y_temp = y_visited[j]
             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
                 break
 
+# for j in range(len(x_visited)):
+#             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
+#             plt.pause(0.005)
+#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+#                 break
+
 plt.title("The shortest Path travelled by the point robot")
 for i in range(len(path_x_coord)):
-    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='blue' , s=2, marker='D')
+    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='yellow' , s=3, marker='D')
     plt.pause(0.005)
 plt.waitforbuttonpress(timeout=-1)
 plt.show
