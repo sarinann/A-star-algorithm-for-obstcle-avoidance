@@ -7,83 +7,106 @@ import time
 import copy
 import numpy as np
 from math import dist
-# start = (90, 90, 0)
-# goal = (400,20, 30)
-# goal_x = goal[0]
-# goal_y = goal[1]
+import cv2 as cv
+
+print("Hi!! \n")
 start_time = time.time()
 threshold = 0.5
+robot_radius = int(input("Enter the radius of the robot \n"))
+print("____________________________________________________________")
+step_size = int(input("Enter the stepsize for the robot. Choose from 1 to 10 \n"))
+print("______________________________________________________________________")
+while step_size not in range(1,11):
+    step_size = int(input("\n Enter again a step size from 1 to 10 \n"))
+    print("______________________________________________________________________")
+clearance = int(input("Enter the clearance to be maintained around the obstacles \n"))
+print("______________________________________________________________________")
+#Total amount the boundary needs to be bloated by taking into account robot radius and clearance.
+total_bloat = clearance + robot_radius
 
-# Defining the four walls. The point should lie within the boundary
-
-def Main_Wall(x, y, theta):
-    if (x <= 5) or (x >= 595) or (y <= 5) or (y >= 245):
-        return True
+# Using OpenCV libraries to create shapes of the polynomials of the obstacles and their map
+def create_polynomial(image, vertices, color, type):
+    vertices = vertices.reshape((-1,1,2))
+    if type == "polygon":
+        cv.fillPoly(image,[vertices],color)
     else:
-        return False
-# Creating and defining obstacle spaces
+        cv.polylines(image,[vertices],True,color, thickness = total_bloat)
 
-def Rectangle_Top(x, y, theta):
-    if (x >= 95) and (x <= 155) and (y >= 145) and (y <= 250):
-        return True
+def create_map():
+    #initializing the map
+    map = np.zeros((250,600, 3), dtype="uint8")    
+    # Defining colors
+    white = (255,255,255)
+    # blue = (255, 0, 0)
+    # orange = (0, 165, 255)
+    # red = (0, 0, 255)
+
+    # Hexagon
+    hexagon = np.array([[300,50], [365, 87.5], [365,162.5], 
+                       [300,200], [235, 162.5], [235, 87.5]], np.int32)
+    create_polynomial(map, hexagon, white, "polygon")
+    hexagon_bloat = np.array([[300,45], [369, 87.5], [369,162.5], 
+                          [300,205], [235, 162.5], [235, 87.5]], np.int32)
+    create_polynomial(map, hexagon_bloat, white, "Border")
+
+    # Triangle
+    traingle = np.array([[460, 25], [460, 225], [510,125]], np.int32)
+    create_polynomial(map, traingle, white, "polygon")
+    triangle_bloat = np.array([[456, 20], [456, 230], [514,125]], np.int32)
+    create_polynomial(map, triangle_bloat, white, "Border") 
+
+    # Rectangle
+    cv.rectangle(map, (100,0), (150,100), white, -1)
+    cv.rectangle(map, (100,0), (150,100), white, total_bloat)
+    cv.rectangle(map, (100,150), (150,250), white, -1)
+    cv.rectangle(map, (100,150), (150, 250), white, total_bloat)
+    cv.rectangle(map, (-1, -1), (601, 251), white, total_bloat)     
+
+    return cv.resize(map, (int(600/threshold),int(250/threshold)))
+
+#Creating the map and flipping it about Y-Axis to match the origin points 
+map = create_map()
+
+map = cv.flip(map, 0)
+
+def obstacle_check(node):
+    X = int(node[1]/threshold)
+    Y = int(node[0]/threshold)
+  
+    if map[X, Y].any() == np.array([0, 0, 0]).all():
+        bool_value = False
+    elif map[X, Y].all() == np.array([255, 255, 255]).all():
+        bool_value = True
     else:
-        return False
+        bool_value = True     
 
-def Rectangle_Bottom(x, y, theta):
-    if (x >= 95) and (x <= 155) and (y >= 0) and (y <= 105):
-        return True
-    else:
-        return False
-
-
-def Triangle(x, y, theta):
-    if (x >= 455) and (((y-240)-(((240-125)/(455-515))*(x-455))) <= 0) and (((y-125)-(((125-10)/(515-455))*(x-515))) >= 0):
-        return True
-    else:
-        return False
-
-def Hexagon(x, y, theta):
-    if (x >= 230.05) and (x <= 369.95) and (((y-84.61)-((84.61-44.22)/(369.95-300))*(x-369.95)) >= 0) and (((y-44.22)-((44.22-84.61)/(300-230.04))*(x-300)) >= 0) and (((y-165.38)-((165.38-205.77)/(230.05-300))*(x-230.05)) <= 0) and (((y-205.77)-((205.77-165.38)/(300-369.95))*(x-300)) <= 0):
-        return True
-    else:
-        return False
-
-def Obstacle_space(x, y, theta):
-    if (Main_Wall(x, y, theta) or Rectangle_Top(x, y, theta) or Rectangle_Bottom(x, y, theta) or Triangle(x, y, theta) or Hexagon(x, y, theta)) == True:
-        return True
-    else:
-        return False
+    return bool_value
 
 def a_star_node_create(total_cost, cost_to_come, parent, node):
     return (total_cost, cost_to_come, parent, node)
-
 
 start_point_x = input("Enter the x-coordinate of the start point \n")
 start_point_y = input("Enter the y-coordinate of the start point \n")
 start_point_theta = input("Enter the start orientation \n")
 start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-while Obstacle_space(start[0], start[1], start[2]):
+while obstacle_check((start[0], start[1])):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     start_point_x = input("Enter the x-coordinate of the start point \n")
     start_point_y = input("Enter the y-coordinate of the start point \n")
     start_point_theta = input("Enter the start orientation \n")
     start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-
+print("_____________________________________________________________________________")
 goal_point_x = input("Enter the x-coordinate of the goal point \n")
 goal_point_y = input("Enter the y-coordinate of the goal point \n")
 goal_point_orien = input("Enter the goal orientation \n")
 goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-while Obstacle_space(goal[0], goal[1], goal[2]):
+while obstacle_check((goal[0], goal[1])):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     goal_point_x = input("Enter the x-coordinate of the goal point \n")
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
     goal_point_orien = input("Enter the goal orientation \n")
     goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-
-step_size = int(input("Enter the stepsize \n"))
-clearance = int(input("Enter the clearance to be maintained around the obstacles"))
-robot_radius = int(input("Enter the radius of the robot"))
-
+print("_____________________________________________________________________________")
 goal_x = goal[0]
 goal_y = goal[1]
 
@@ -203,15 +226,7 @@ def rounded_value(input):
         input = (np.round(input/threshold))*threshold
     return input
 
-while Obstacle_space(goal[0], goal[1], goal[2]):
-    print("These coordinates lie inside the obstacle space. Please enter new values\n")
-    goal_point_x = input("Enter the x-coordinate of the goal point \n")
-    goal_point_y = input("Enter the y-coordinate of the goal point \n")
-    goal_orien = input(
-        "Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
-    goal = (int(goal_point_x), int(goal_point_y), float(goal_orien))
-
-
+plotting = {}
 def Astar_algoritm(start, goal):
 
     initial_cost_to_go = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2)
@@ -225,20 +240,20 @@ def Astar_algoritm(start, goal):
     open_list = PriorityQueue()
     open_list.put(start_pose)
 
-    all_x_visited = []
-    all_y_visited = []
-    close_list = {}
+    visited_nodes_x = []
+    visited_nodes_y = []
+    visited_close_list = {}
 
     while not open_list.empty():
 
         current_node = open_list.get()
-        if current_node[3] in close_list:
+        if current_node[3] in visited_close_list:
             continue
 
-        all_x_visited.append(current_node[3][0])
-        all_y_visited.append(current_node[3][1])
+        visited_nodes_x.append(current_node[3][0])
+        visited_nodes_y.append(current_node[3][1])
 
-        close_list[current_node[3]] = current_node[2]
+        visited_close_list[current_node[3]] = current_node[2]
         theta = current_node[3][2]
 
         distance_to_goal = np.sqrt(
@@ -246,34 +261,34 @@ def Astar_algoritm(start, goal):
 
         if distance_to_goal <= 1.5:
             print("Goal has been reached!!!!")
+            print("_____________________________________________________________________________")
             generated_path = []
             current_pose = current_node[3]
             while current_pose is not None:
                 generated_path.append(current_pose)
-                current_pose = close_list[current_pose]
+                current_pose = visited_close_list[current_pose]
             # Reverse the path and return
-            return generated_path[::-1], all_x_visited, all_y_visited
+            return generated_path[::-1], visited_nodes_x, visited_nodes_y
 
         actions = [ActionMove_neg60, ActionMove_neg30,
                    ActionMove_zero, ActionMove_pos30, ActionMove_pos60]
         for action in actions:
-            # Get the modified node and its cost to move from current node
+            # Get the modified node and its total cost and cost to come from current node
             child_node = action(current_node)
-            new_node = child_node[3]
-            # If the node is not in the cost dictionary, add it with infinite cost
-            if zeros[int(new_node[0]/threshold)][int(new_node[1]/threshold)][int(new_node[2]/30)] == 0:
-                zeros[int(new_node[0]/threshold)][int(new_node[1]/threshold)
-                                            ][int(new_node[2]/30)] = 1
-                if Obstacle_space(new_node[0], new_node[1], theta) == False:
+            temp_node = child_node[3]
+            # If the node is not in the the visited closed dictionary, then update the parent based on cost
+            if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/30)] == 0:
+                zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)
+                                            ][int(temp_node[2]/30)] = 1
+                if obstacle_check((temp_node[0], temp_node[1])) == False:
                     total_cost = child_node[0]
-                    if child_node[3] not in close_list:
+                    if child_node[3] not in visited_close_list:
                         for i in range(0, (open_list.qsize())):
                             if open_list.queue[i][3] == child_node[3] and open_list.queue[i][0] > total_cost:
                                 open_list.queue[i][2] = child_node[2]
                         open_list.put(child_node)
-                        all_x_visited.append(child_node[3][0])
-                        all_y_visited.append(child_node[3][1])
-                # cost_from_start[new_node[2]] = float('inf')
+                        visited_nodes_x.append(child_node[3][0])
+                        visited_nodes_y.append(child_node[3][1])
     return None
 
 
@@ -282,8 +297,8 @@ end_time = time.time()
 # print(generated_path)
 
 print(
-    f'Time taken to solve using the A* algorithm: {end_time - start_time}\n')
-
+    f'Time taken to solve using the A* algorithm: {end_time - start_time} \n')
+print("_____________________________________________________________________________")
 path_x_coord = []
 path_y_coord = []
 for i in range(len(generated_path)):
@@ -330,16 +345,32 @@ for i in range(len(x_visited)):
             y_temp = y_visited[j]
             if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
                 break
-
+atter
 # for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
+#             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
 #             plt.pause(0.005)
 #             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
 #                 break
 
 plt.title("The shortest Path travelled by the robot")
 for i in range(len(path_x_coord)):
-    plt.scatter(path_x_coord[i], path_y_coord[i], c='red', s=3, marker='D')
+    ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=0.8)
     plt.pause(0.005)
+
+# # calculate the distance between consecutive points
+# distances = np.sqrt(np.diff(path_x_coord)**2 + np.diff(path_y_coord)**2)
+
+# # calculate the maximum distance to use as a reference for scaling
+# max_distance = max(distances)
+
+# plt.title("The shortest Path travelled by the robot")
+# for i in range(len(path_x_coord)-1):
+#     dx = path_x_coord[i+1] - path_x_coord[i]
+#     dy = path_y_coord[i+1] - path_y_coord[i]
+#     scale = distances[i] / max_distance * 20
+#     ax.quiver(path_x_coord[i], path_y_coord[i], dx, dy, units='xy', scale=scale)
+#     plt.pause(0.005)
+
+
 plt.waitforbuttonpress(timeout=-1)
 plt.show
