@@ -34,13 +34,8 @@ def create_polynomial(image, vertices, color, type):
 
 def create_map():
     #initializing the map
-    map = np.zeros((250,600, 3), dtype="uint8")    
-    # Defining colors
+    map = np.zeros((250,600, 3), dtype="uint8") 
     white = (255,255,255)
-    # blue = (255, 0, 0)
-    # orange = (0, 165, 255)
-    # red = (0, 0, 255)
-
     # Hexagon
     hexagon = np.array([[300,50], [365, 87.5], [365,162.5], 
                        [300,200], [235, 162.5], [235, 87.5]], np.int32)
@@ -110,7 +105,7 @@ print("_________________________________________________________________________
 goal_x = goal[0]
 goal_y = goal[1]
 
-# Defining the movements: up. left. right, down, up left, up right, down left and down right   
+# Defining the 5 moments spanning 120deg  
 def ActionMove_neg60(node):
     modified_node = copy.deepcopy(node)
     cost = modified_node[1]+1
@@ -325,55 +320,37 @@ plt.axis([0, 600, 0, 250])
 x_temp = 0
 y_temp = 0
 
-for i in range(len(x_visited)):
-    if x_temp == goal[0] and y_temp == goal[1]:
-        break
-    if len(x_visited) > 100:
-        plt.scatter(x_visited[0:100], y_visited[0:100], c='blue', s=1)
-        plt.pause(0.0005)
-        del x_visited[:100]
-        del y_visited[:100]
-    else:
-        for j in range(len(x_visited)):
-            plt.scatter(x_visited[j], y_visited[j], c='blue', s=1)
-            plt.pause(0.0005)
-            x_temp = x_visited[j]
-            y_temp = y_visited[j]
-            if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
-                break
-            
-# for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
+# for i in range(len(x_visited)):
+#     if x_temp == goal[0] and y_temp == goal[1]:
+#         break
+#     if len(x_visited) > 100:
+#         plt.scatter(x_visited[0:100], y_visited[0:100], c='blue', s=1)
+#         plt.pause(0.005)
+#         del x_visited[:100]
+#         del y_visited[:100]
+#     else:
+#         for j in range(len(x_visited)):
+#             plt.scatter(x_visited[j], y_visited[j], c='blue', s=1)
 #             plt.pause(0.005)
-#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+#             x_temp = x_visited[j]
+#             y_temp = y_visited[j]
+#             if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
 #                 break
-# plt.waitforbuttonpress()
-# plt.show
-plt.show(block=True)
+            
+for j in range(len(x_visited)):
+            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=2)
+            plt.pause(0.0005)
+            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+                break
 
 plt.title("The shortest Path travelled by the robot")
-for i in range(len(path_x_coord)):
-    ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=0.8)
+for i in range(len(path_x_coord)-1):
+    ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=1)
     plt.pause(0.005)
-
-# # calculate the distance between consecutive points
-# distances = np.sqrt(np.diff(path_x_coord)**2 + np.diff(path_y_coord)**2)
-
-# # calculate the maximum distance to use as a reference for scaling
-# max_distance = max(distances)
-
-# plt.title("The shortest Path travelled by the robot")
-# for i in range(len(path_x_coord)-1):
-#     dx = path_x_coord[i+1] - path_x_coord[i]
-#     dy = path_y_coord[i+1] - path_y_coord[i]
-#     scale = distances[i] / max_distance * 20
-#     ax.quiver(path_x_coord[i], path_y_coord[i], dx, dy, units='xy', scale=scale)
-#     plt.pause(0.005)
-
-
-# plt.waitforbuttonpress()
-# plt.show
-plt.show(block=True)
+plt.savefig('Astar algorithm', bbox_inches='tight')
+plt.waitforbuttonpress(timeout=-1)
+plt.show
+# plt.show(block=True)
 
 
 
