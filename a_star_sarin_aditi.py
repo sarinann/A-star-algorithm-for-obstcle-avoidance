@@ -5,6 +5,7 @@ import matplotlib.patches as patch
 from queue import PriorityQueue
 import time
 import copy
+import heapq
 import numpy as np
 from math import dist
 import cv2 as cv
@@ -81,7 +82,7 @@ def obstacle_check(node):
         bool_value = True     
 
     return bool_value
-
+#Function to create a node with parameters needed for the algorithm
 def a_star_node_create(total_cost, cost_to_come, parent, node):
     return (total_cost, cost_to_come, parent, node)
 
@@ -110,7 +111,7 @@ print("_________________________________________________________________________
 goal_x = goal[0]
 goal_y = goal[1]
 
-# Defining the movements for moving from orientations -60deg to 60deg
+# Defining the movements: up. left. right, down, up left, up right, down left and down right   
 def ActionMove_neg60(node):
     modified_node = copy.deepcopy(node)
     cost = modified_node[1]+1
@@ -345,14 +346,20 @@ for i in range(len(x_visited)):
             y_temp = y_visited[j]
             if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
                 break
-atter
+            
 # for j in range(len(x_visited)):
 #             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
 #             plt.pause(0.005)
 #             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
 #                 break
 
-plt.title("The shortest Path travelled by the robot")
+for j in range(len(x_visited)):
+            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
+            plt.pause(0.005)
+            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+                break
+
+plt.title("The shortest Path travelled by the point robot")
 for i in range(len(path_x_coord)):
     ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=0.8)
     plt.pause(0.005)
@@ -374,3 +381,7 @@ for i in range(len(path_x_coord)):
 
 plt.waitforbuttonpress(timeout=-1)
 plt.show
+
+
+
+
