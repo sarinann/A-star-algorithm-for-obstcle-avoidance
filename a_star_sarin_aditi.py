@@ -5,7 +5,6 @@ import matplotlib.patches as patch
 from queue import PriorityQueue
 import time
 import copy
-import heapq
 import numpy as np
 from math import dist
 import cv2 as cv
@@ -70,7 +69,7 @@ map = create_map()
 
 map = cv.flip(map, 0)
 
-def obstacle_check(node):
+def if_obstacle(node):
     X = int(node[1]/threshold)
     Y = int(node[0]/threshold)
   
@@ -90,7 +89,7 @@ start_point_x = input("Enter the x-coordinate of the start point \n")
 start_point_y = input("Enter the y-coordinate of the start point \n")
 start_point_theta = input("Enter the start orientation \n")
 start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-while obstacle_check((start[0], start[1])):
+while if_obstacle((start[0], start[1])):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     start_point_x = input("Enter the x-coordinate of the start point \n")
     start_point_y = input("Enter the y-coordinate of the start point \n")
@@ -101,7 +100,7 @@ goal_point_x = input("Enter the x-coordinate of the goal point \n")
 goal_point_y = input("Enter the y-coordinate of the goal point \n")
 goal_point_orien = input("Enter the goal orientation \n")
 goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-while obstacle_check((goal[0], goal[1])):
+while if_obstacle((goal[0], goal[1])):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     goal_point_x = input("Enter the x-coordinate of the goal point \n")
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
@@ -281,7 +280,7 @@ def Astar_algoritm(start, goal):
             if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/30)] == 0:
                 zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)
                                             ][int(temp_node[2]/30)] = 1
-                if obstacle_check((temp_node[0], temp_node[1])) == False:
+                if if_obstacle((temp_node[0], temp_node[1])) == False:
                     total_cost = child_node[0]
                     if child_node[3] not in visited_close_list:
                         for i in range(0, (open_list.qsize())):
@@ -307,14 +306,10 @@ for i in range(len(generated_path)):
     path_y_coord.append(generated_path[i][1])
 
 fig, ax = plt.subplots(figsize=(6, 2.5))
-Triangle = patch.Polygon(
-    [(460, 25), (460, 225), (510, 125)], linewidth=1, edgecolor='y', facecolor='y')
-Rectangle_Bottom = patch.Rectangle(
-    (100, 150), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
-Rectangle_Top = patch.Rectangle(
-    (100, 0), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
-Hexagon = patch.RegularPolygon(
-    (300, 125), 6, 75, linewidth=1, edgecolor='y', facecolor='y')
+Triangle = patch.Polygon([(460, 25), (460, 225), (510, 125)], linewidth=1, edgecolor='y', facecolor='y')
+Rectangle_Bottom = patch.Rectangle((100, 150), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
+Rectangle_Top = patch.Rectangle((100, 0), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
+Hexagon = patch.RegularPolygon((300, 125), 6, 75, linewidth=1, edgecolor='y', facecolor='y')
 # Plotting the obstacles
 ax.add_patch(Triangle)
 ax.add_patch(Rectangle_Bottom)
@@ -348,18 +343,15 @@ for i in range(len(x_visited)):
                 break
             
 # for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
+#             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
 #             plt.pause(0.005)
 #             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
 #                 break
+# plt.waitforbuttonpress()
+# plt.show
+plt.show(block=True)
 
-for j in range(len(x_visited)):
-            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
-            plt.pause(0.005)
-            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
-                break
-
-plt.title("The shortest Path travelled by the point robot")
+plt.title("The shortest Path travelled by the robot")
 for i in range(len(path_x_coord)):
     ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=0.8)
     plt.pause(0.005)
@@ -379,8 +371,9 @@ for i in range(len(path_x_coord)):
 #     plt.pause(0.005)
 
 
-plt.waitforbuttonpress(timeout=-1)
-plt.show
+# plt.waitforbuttonpress()
+# plt.show
+plt.show(block=True)
 
 
 

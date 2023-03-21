@@ -5,10 +5,12 @@ File Name: proj3_sarin_aditi.zip
 
 Libraries used: 
 Queue
-time
-copy
-matplotlib
-
+Time
+Copy
+Matplotlib
+Numpy
+OpenCV
+Math
 
 - Run the file a_star_sarin_aditi.py to generate the nodes and paths through A-star Algorithm
 - Provide your input and goal states with x-coordinate, y-coordinate and the orientation (-60deg, -30deg, 0deg, 30deg and 60deg) 
