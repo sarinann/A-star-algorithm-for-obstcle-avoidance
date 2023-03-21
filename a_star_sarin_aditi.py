@@ -7,10 +7,7 @@ import time
 import copy
 import numpy as np
 from math import dist
-# start = (90, 90, 0)
-# goal = (400,20, 30)
-# goal_x = goal[0]
-# goal_y = goal[1]
+
 start_time = time.time()
 threshold = 0.5
 
@@ -81,10 +78,7 @@ step_size = int(input("Enter the stepsize \n"))
 
 goal_x = goal[0]
 goal_y = goal[1]
-
-
-# step_size = 5
-# Defining the movements: up. left. right, down, up left, up right, down left and down right   
+ 
 def ActionMove_neg60(node):
     modified_node = copy.deepcopy(node)
     cost = modified_node[1]+1
@@ -191,15 +185,14 @@ def rounded_value(input):
         input = (np.round(input/threshold))*threshold
     return input
 
-step = 5
-
-
 while Obstacle_space(goal[0], goal[1], goal[2]):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     goal_point_x = input("Enter the x-coordinate of the goal point \n")
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
     goal_orien = input("Define the final orientation in degrees - Options: -60,-30, 0, 30, 60")
     goal= (int(goal_point_x), int(goal_point_y), float(goal_orien))
+
+plotting = {}
 
 def Astar_algoritm(start, goal):
 
@@ -231,7 +224,9 @@ def Astar_algoritm(start, goal):
         all_y_visited.append(current_node[3][1])
 
         # visited_closed_dict[present_node[2]] = (present_node[1]) 
-        close_list[current_node[3]] = current_node[2]   
+        close_list[current_node[3]] = current_node[2]  
+
+        plotting[current_node[3]] = [] 
 
         theta = current_node[3][2]
 
@@ -259,6 +254,8 @@ def Astar_algoritm(start, goal):
                     if Obstacle_space(new_node[0], new_node[1], theta) == False:
                         total_cost = child_node[0]
                         if child_node[3] not in close_list:
+
+                            plotting[child_node[2]].append(new_node)
                             for i in range(0,(open_list.qsize())):
                                 if open_list.queue[i][3] == child_node[3] and open_list.queue[i][0] > total_cost:
                                     open_list.queue[i][2] = child_node[2]
@@ -300,38 +297,19 @@ plt.ylabel('Y-Axis')
 plt.title("Visualizing Explored Nodes through Dijkstra Algorithm")
 plt.axis([0 , 600 , 0 ,250])
 
-x_temp = 0
-y_temp = 0
+# print(plotting_dict)
+for k, v in plotting.items() :
+    for i in v:
+        plt.plot([k[0], i[0]],[k[1], i[1]], c='red')
 
-# for i in range(len(x_visited)) :
-#     if x_temp == goal[0] and y_temp == goal[1] :
-#         break
-#     if len(x_visited)>100:
-#         plt.scatter(x_visited[0:100] , y_visited[0:100] , c='blue' , s=1)
-#         plt.pause(0.0005)
-#         del x_visited[:100]
-#         del y_visited[:100]
-#     else :
-#         for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j] , y_visited[j] , c='blue' , s=1)
-#             plt.pause(0.0005)
-#             x_temp = x_visited[j]
-#             y_temp = y_visited[j]
-#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
-#                 break
-
-for j in range(len(x_visited)):
-            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=1)
-            plt.pause(0.005)
-            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
-                break
+        plt.pause(0.00005)
 
 plt.title("The shortest Path travelled by the point robot")
 for i in range(len(path_x_coord)):
-    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='blue' , s=2, marker='D')
+    plt.scatter(path_x_coord[i] , path_y_coord[i] , c='blue' , s=20, marker='D')
     plt.pause(0.005)
-plt.waitforbuttonpress(timeout=-1)
-plt.show
+# plt.waitforbuttonpress(timeout=-1)
+plt.show()
 
 
 
