@@ -2,6 +2,9 @@ ENPM661 - PROJECT3 - PHASE 1
 Planning for Autonomous Robots
 
 File Name: proj3_sarin_aditi.zip
+Team Members:
+Sarin Ann Mathew (sarinann)
+Aditi Arun Bhoir (abhoir)
 
 Libraries used: 
 Queue
