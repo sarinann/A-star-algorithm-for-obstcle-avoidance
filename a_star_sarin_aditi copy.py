@@ -212,9 +212,9 @@ def Astar_algoritm(start, goal):
             child_node = one(current_node, action[0], action[1])
             temp_node = child_node[3]
             # If the node is not in the the visited closed dictionary, then update the parent based on cost
-            if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/30)] == 0:
+            if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/0.1)] == 0:
                 zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)
-                                            ][int(temp_node[2]/30)] = 1
+                                            ][int(temp_node[2]/0.1)] = 1
                 if if_obstacle((temp_node[0], temp_node[1])) == False:
                     total_cost = child_node[0]
                     if child_node[3] not in visited_close_list:
@@ -225,7 +225,6 @@ def Astar_algoritm(start, goal):
                         visited_nodes_x.append(child_node[3][0])
                         visited_nodes_y.append(child_node[3][1])
     return None
-
 
 generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
 end_time = time.time()
