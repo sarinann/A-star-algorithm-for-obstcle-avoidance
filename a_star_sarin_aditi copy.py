@@ -15,11 +15,6 @@ start_time = time.time()
 threshold = 0.5
 robot_radius = int(input("Enter the radius of the robot \n"))
 print("____________________________________________________________")
-step_size = int(input("Enter the stepsize for the robot. Choose from 1 to 10 \n"))
-print("______________________________________________________________________")
-while step_size not in range(1,11):
-    step_size = int(input("\n Enter again a step size from 1 to 10 \n"))
-    print("______________________________________________________________________")
 clearance = int(input("Enter the clearance to be maintained around the obstacles \n"))
 print("______________________________________________________________________")
 
