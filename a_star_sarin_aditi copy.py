@@ -125,15 +125,19 @@ def cost(Xi,Yi,Thetai,UL,UR):
     D=0
     while t<1:
         t = t + dt
-        Xs = Xn
-        Ys = Yn
+        # Xs = Xn
+        # Ys = Yn
         Delta_Xn = 0.5*r * (UL + UR) * math.cos(Thetan) * dt
         Delta_Yn = 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
         D=D+ math.sqrt(Delta_Xn**2 + Delta_Yn**2)
+        Xn = Xn + Delta_Xn
+        Yn = Yn + Delta_Yn
     Thetan = 180 * (Thetan) / 3.14
+    if abs(Thetan) > 360:
+        Thetan = 360 - abs(Thetan)       
+        
     return Xn, Yn, Thetan, D   
-
 
 
 # Defining the 5 moments spanning 120deg  
@@ -147,7 +151,7 @@ def one(node, left_speed, right_speed):
     modi_x = rounded_value(modi_x)
     modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
-
+    c2c = c2c + modified_node[1]
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
@@ -168,7 +172,7 @@ def Astar_algoritm(start, goal):
 
     initial_cost = initial_cost_to_go + 0
 
-    zeros = np.zeros((int(600/threshold), int(250/threshold), 12))
+    zeros = np.zeros((int(600/threshold), int(250/threshold), int(360/30)))
 
     start_pose = a_star_node_create(initial_cost, 0, None, start)
 
@@ -210,11 +214,12 @@ def Astar_algoritm(start, goal):
         for action in actions:
             # Get the modified node and its total cost and cost to come from current node
             child_node = one(current_node, action[0], action[1])
+            # print(child_node)
             temp_node = child_node[3]
             # If the node is not in the the visited closed dictionary, then update the parent based on cost
-            if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/0.1)] == 0:
+            if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/30)] == 0:
                 zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)
-                                            ][int(temp_node[2]/0.1)] = 1
+                                            ][int(temp_node[2]/30)] = 1
                 if if_obstacle((temp_node[0], temp_node[1])) == False:
                     total_cost = child_node[0]
                     if child_node[3] not in visited_close_list:
@@ -228,7 +233,7 @@ def Astar_algoritm(start, goal):
 
 generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
 end_time = time.time()
-# print(generated_path)
+print(generated_path)
 
 print(
     f'Time taken to solve using the A* algorithm: {end_time - start_time} \n')
