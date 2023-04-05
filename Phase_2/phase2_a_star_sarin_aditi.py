@@ -125,14 +125,14 @@ def cost(Xi,Yi,Thetai,UL,UR):
     D=0
     while t<1:
         t = t + dt
-        # Xs = Xn
-        # Ys = Yn
-        Delta_Xn = 0.5*r * (UL + UR) * math.cos(Thetan) * dt
-        Delta_Yn = 0.5*r * (UL + UR) * math.sin(Thetan) * dt
+        Xs = Xn
+        Ys = Yn
+        Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
-        D=D+ math.sqrt(Delta_Xn**2 + Delta_Yn**2)
-        Xn = Xn + Delta_Xn
-        Yn = Yn + Delta_Yn
+        D=D+ math.sqrt(math.pow((0.5 * r * (UL + UR) * math.cos(Thetan) * dt), 2) + math.pow((0.5 * r * (UL + UR) * math.sin(Thetan) * dt), 2))
+        # Xn = Xn + Delta_Xn
+        # Yn = Yn + Delta_Yn
     Thetan = 180 * (Thetan) / 3.14
     if abs(Thetan) > 360:
         Thetan = 360 - abs(Thetan)       
@@ -151,7 +151,7 @@ def one(node, left_speed, right_speed):
     modi_x = rounded_value(modi_x)
     modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
-    c2c = c2c + modified_node[1]
+    # c2c = c2c + modified_node[1]
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
