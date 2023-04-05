@@ -155,7 +155,7 @@ def one(node, left_speed, right_speed):
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
-
+    total_cost = rounded_value(total_cost)
     passed_node = a_star_node_create(
         total_cost, c2c, parent_node, modified_node)
     return passed_node
@@ -214,7 +214,7 @@ def Astar_algoritm(start, goal):
         for action in actions:
             # Get the modified node and its total cost and cost to come from current node
             child_node = one(current_node, action[0], action[1])
-            # print(child_node)
+            print(child_node)
             temp_node = child_node[3]
             # If the node is not in the the visited closed dictionary, then update the parent based on cost
             if zeros[int(temp_node[0]/threshold)][int(temp_node[1]/threshold)][int(temp_node[2]/30)] == 0:
@@ -233,6 +233,7 @@ def Astar_algoritm(start, goal):
 
 generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
 end_time = time.time()
+print('\n')
 print(generated_path)
 
 print(
