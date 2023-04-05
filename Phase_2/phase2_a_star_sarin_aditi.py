@@ -292,7 +292,7 @@ plt.title("The shortest Path travelled by the robot")
 for i in range(len(path_x_coord)-1):
     ax.quiver(path_x_coord[i], path_y_coord[i], path_x_coord[i+1]-path_x_coord[i], path_y_coord[i+1]-path_y_coord[i], units='xy' ,scale=1)
     plt.pause(0.005)
-plt.savefig('Astar algorithm', bbox_inches='tight')
+# plt.savefig('Astar algorithm', bbox_inches='tight')
 plt.waitforbuttonpress(timeout=-1)
 plt.show
 # plt.show(block=True)
