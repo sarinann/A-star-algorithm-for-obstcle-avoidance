@@ -117,8 +117,6 @@ def cost(Xi,Yi,Thetai,UL,UR):
     Xn=Xi
     Yn=Yi
     Thetan = 3.14 * Thetai / 180
-
-
 # Xi, Yi,Thetai: Input point's coordinates
 # Xs, Ys: Start point coordinates for plot function
 # Xn, Yn, Thetan: End point coordintes
@@ -127,13 +125,15 @@ def cost(Xi,Yi,Thetai,UL,UR):
         t = t + dt
         Xs = Xn
         Ys = Yn
-        Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
-        Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
+        # Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        # Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
         D=D+ math.sqrt(math.pow((0.5 * r * (UL + UR) * math.cos(Thetan) * dt), 2) + math.pow((0.5 * r * (UL + UR) * math.sin(Thetan) * dt), 2))
+        Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         # Xn = Xn + Delta_Xn
         # Yn = Yn + Delta_Yn
-    Thetan = 180 * (Thetan) / 3.14
+    Thetan = 180 *(Thetan)/3.14
     if abs(Thetan) > 360:
         Thetan = 360 - abs(Thetan)       
         
