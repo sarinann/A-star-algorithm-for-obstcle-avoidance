@@ -113,6 +113,8 @@ def cost(Xi,Yi,Thetai,UL,UR):
     t = 0
     r = 0.038
     L = 0.354
+    # r = 3.8
+    # L = 3.54
     dt = 0.1
     Xn=Xi
     Yn=Yi
@@ -123,14 +125,14 @@ def cost(Xi,Yi,Thetai,UL,UR):
     D=0
     while t<1:
         t = t + dt
-        # Xs = Xn
-        # Ys = Yn
-        # Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
-        # Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
-        Thetan += (r / L) * (UR - UL) * dt
-        D=D+ math.sqrt(math.pow((0.5 * r * (UL + UR) * math.cos(Thetan) * dt), 2) + math.pow((0.5 * r * (UL + UR) * math.sin(Thetan) * dt), 2))
+        Xs = Xn
+        Ys = Yn
         Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
         Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
+        Thetan += (r / L) * (UR - UL) * dt
+        D=D+ math.sqrt(math.pow((0.5 * r * (UL + UR) * math.cos(Thetan) * dt), 2) + math.pow((0.5 * r * (UL + UR) * math.sin(Thetan) * dt), 2))
+        # Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
+        # Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         # Xn = Xn + Delta_Xn
         # Yn = Yn + Delta_Yn
     Thetan = 180 *(Thetan)/3.14
@@ -154,7 +156,7 @@ def one(node, left_speed, right_speed):
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
-    # total_cost = rounded_value(total_cost)
+    total_cost = rounded_value(total_cost)
     passed_node = a_star_node_create(
         total_cost, c2c, parent_node, modified_node)
     return passed_node
