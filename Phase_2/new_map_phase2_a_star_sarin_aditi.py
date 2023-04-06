@@ -40,27 +40,39 @@ def create_map():
     map = np.zeros((2000,6000, 3), dtype="uint8") 
     white = (255,255,255)
     # Hexagon
-    hexagon = np.array([[300,50], [365, 87.5], [365,162.5], 
-                       [300,200], [235, 162.5], [235, 87.5]], np.int32)
-    create_polynomial(map, hexagon, white, "polygon")
-    hexagon_bloat = np.array([[300,45], [369, 87.5], [369,162.5], 
-                          [300,205], [235, 162.5], [235, 87.5]], np.int32)
-    create_polynomial(map, hexagon_bloat, white, "Border")
+    # hexagon = np.array([[300,50], [365, 87.5], [365,162.5], 
+    #                    [300,200], [235, 162.5], [235, 87.5]], np.int32)
+    # create_polynomial(map, hexagon, white, "polygon")
+    # hexagon_bloat = np.array([[300,45], [369, 87.5], [369,162.5], 
+    #                       [300,205], [235, 162.5], [235, 87.5]], np.int32)
+    # create_polynomial(map, hexagon_bloat, white, "Border")
 
-    # Triangle
-    traingle = np.array([[460, 25], [460, 225], [510,125]], np.int32)
-    create_polynomial(map, traingle, white, "polygon")
-    triangle_bloat = np.array([[456, 20], [456, 230], [514,125]], np.int32)
-    create_polynomial(map, triangle_bloat, white, "Border") 
+    # # Triangle
+    # traingle = np.array([[460, 25], [460, 225], [510,125]], np.int32)
+    # create_polynomial(map, traingle, white, "polygon")
+    # triangle_bloat = np.array([[456, 20], [456, 230], [514,125]], np.int32)
+    # create_polynomial(map, triangle_bloat, white, "Border") 
+
+    #Circle
+    center = (4000, 1100)
+    radius = 500
+    thickness = total_bloat
+    cv.circle(map, center, radius, white, thickness)
+    # circle = np.
 
     # Rectangle
-    cv.rectangle(map, (100,0), (150,100), white, -1)
-    cv.rectangle(map, (100,0), (150,100), white, total_bloat)
-    cv.rectangle(map, (100,150), (150,250), white, -1)
-    cv.rectangle(map, (100,150), (150, 250), white, total_bloat)
-    cv.rectangle(map, (-1, -1), (601, 251), white, total_bloat)     
+    # cv.rectangle(map, (1.5,0.75), (1.65,2), white, -1)
+    # cv.rectangle(map, (1.5,0.75), (1.65,2), white, total_bloat)
+    # cv.rectangle(map, (2.5,0), (2.65,1.25), white, -1)
+    # cv.rectangle(map, (2.5,0), (2.65,1.25), white, total_bloat)
+    # cv.rectangle(map, (-1, -1), (7, 3), white, total_bloat)   
+    cv.rectangle(map, (1500,750), (1650,2000), white, -1)
+    cv.rectangle(map, (1500,750), (1650,2000), white, total_bloat)
+    cv.rectangle(map, (2500,0), (2650,1250), white, -1)
+    cv.rectangle(map, (2500,0), (2650,1250), white, total_bloat)
+    cv.rectangle(map, (-1, -1), (6001, 2001), white, total_bloat)   
 
-    return cv.resize(map, (int(600/threshold),int(250/threshold)))
+    return cv.resize(map, (int(6000/threshold),int(2000/threshold)))
 
 #Creating the map and flipping it about Y-Axis to match the origin points 
 map = create_map()
@@ -179,7 +191,7 @@ def Astar_algoritm(start, goal):
 
     initial_total_cost = initial_cost_to_go + 0
 
-    zeros = np.zeros((int(600/threshold), int(250/threshold), int(360/30)))
+    zeros = np.zeros((int(6000/threshold), int(2000/threshold), int(360/30)))
 
     start_pose = a_star_node_create(initial_total_cost, 0, None, start)
 
@@ -252,22 +264,24 @@ for i in range(len(generated_path)):
     path_x_coord.append(generated_path[i][0])
     path_y_coord.append(generated_path[i][1])
 
-fig, ax = plt.subplots(figsize=(6, 2.5))
-Triangle = patch.Polygon([(460, 25), (460, 225), (510, 125)], linewidth=1, edgecolor='y', facecolor='y')
-Rectangle_Bottom = patch.Rectangle((100, 150), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
-Rectangle_Top = patch.Rectangle((100, 0), 50, 100, linewidth=1, edgecolor='y', facecolor='y')
-Hexagon = patch.RegularPolygon((300, 125), 6, 75, linewidth=1, edgecolor='y', facecolor='y')
+fig, ax = plt.subplots(figsize=(6000, 2000))
+# Triangle = patch.Polygon([(460, 25), (460, 225), (510, 125)], linewidth=1, edgecolor='y', facecolor='y')
+Rectangle_Bottom = patch.Rectangle((2500, 0), 150, 1250, linewidth=1, edgecolor='y', facecolor='y')
+Rectangle_Top = patch.Rectangle((1500, 750), 150, 1250, linewidth=1, edgecolor='y', facecolor='y')
+# Hexagon = patch.RegularPolygon((300, 125), 6, 75, linewidth=1, edgecolor='y', facecolor='y')
+Circle = patch.Circle((4000, 1100), 500, 75, linewidth=1, edgecolor='y', facecolor='y')
 # Plotting the obstacles
-ax.add_patch(Triangle)
+# ax.add_patch(Triangle)
 ax.add_patch(Rectangle_Bottom)
 ax.add_patch(Rectangle_Top)
-ax.add_patch(Hexagon)
+# ax.add_patch(Hexagon)
+ax.add_patch(Circle)
 
 # Plotting the path
 plt.xlabel('X-Axis')
 plt.ylabel('Y-Axis')
 plt.title("Visualizing Explored Nodes through A* Algorithm")
-plt.axis([0, 600, 0, 250])
+plt.axis([0, 6000, 0, 2000])
 
 x_temp = 0
 y_temp = 0
