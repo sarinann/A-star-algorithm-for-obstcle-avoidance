@@ -110,6 +110,7 @@ goal_y = goal[1]
 
 
 def cost(Xi,Yi,Thetai,UL,UR):
+    # Thetai = Thetai % 360
     t = 0
     r = 0.038
     L = 0.354
@@ -136,6 +137,7 @@ def cost(Xi,Yi,Thetai,UL,UR):
         # Xn = Xn + Delta_Xn
         # Yn = Yn + Delta_Yn
     Thetan = 180 *(Thetan)/3.14
+    
     if abs(Thetan) > 360:
         Thetan = 360 - abs(Thetan)               
     return Xn, Yn, Thetan, D   
@@ -152,7 +154,7 @@ def one(node, left_speed, right_speed):
     modi_x = rounded_value(modi_x)
     modi_y = rounded_value(modi_y)
     modified_node = (modi_x, modi_y, modi_theta)
-    # c2c = c2c + modified_node[1]
+    c2c = c2c + modified_node[1]
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
