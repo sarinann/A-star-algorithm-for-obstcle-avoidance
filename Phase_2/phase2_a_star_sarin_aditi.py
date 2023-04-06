@@ -166,8 +166,10 @@ def one(node, left_speed, right_speed):
     return passed_node
 
 def rounded_value(input):
-    if input % 0.5 != 0:
-        input = (np.round(input/threshold))*threshold
+    # if input % 0.2 != 0:
+    #     input = (np.round(input/threshold))*threshold
+
+    input = round(input, 2)
     return input
 
 plotting = {}
