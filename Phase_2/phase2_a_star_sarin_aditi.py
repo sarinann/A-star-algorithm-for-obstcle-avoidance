@@ -123,8 +123,8 @@ def cost(Xi,Yi,Thetai,UL,UR):
     D=0
     while t<1:
         t = t + dt
-        Xs = Xn
-        Ys = Yn
+        # Xs = Xn
+        # Ys = Yn
         # Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
         # Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
@@ -135,8 +135,7 @@ def cost(Xi,Yi,Thetai,UL,UR):
         # Yn = Yn + Delta_Yn
     Thetan = 180 *(Thetan)/3.14
     if abs(Thetan) > 360:
-        Thetan = 360 - abs(Thetan)       
-        
+        Thetan = 360 - abs(Thetan)               
     return Xn, Yn, Thetan, D   
 
 
@@ -155,7 +154,7 @@ def one(node, left_speed, right_speed):
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
-    total_cost = rounded_value(total_cost)
+    # total_cost = rounded_value(total_cost)
     passed_node = a_star_node_create(
         total_cost, c2c, parent_node, modified_node)
     return passed_node
@@ -170,11 +169,11 @@ def Astar_algoritm(start, goal):
 
     initial_cost_to_go = np.sqrt((goal[0]-start[0])**2 + (goal[1]-start[1])**2)
 
-    initial_cost = initial_cost_to_go + 0
+    initial_total_cost = initial_cost_to_go + 0
 
     zeros = np.zeros((int(600/threshold), int(250/threshold), int(360/30)))
 
-    start_pose = a_star_node_create(initial_cost, 0, None, start)
+    start_pose = a_star_node_create(initial_total_cost, 0, None, start)
 
     open_list = PriorityQueue()
     open_list.put(start_pose)
