@@ -37,7 +37,7 @@ def create_polynomial(image, vertices, color, type):
 
 def create_map():
     #initializing the map
-    map = np.zeros((250,600, 3), dtype="uint8") 
+    map = np.zeros((2000,6000, 3), dtype="uint8") 
     white = (255,255,255)
     # Hexagon
     hexagon = np.array([[300,50], [365, 87.5], [365,162.5], 
