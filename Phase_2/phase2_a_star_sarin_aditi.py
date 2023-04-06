@@ -131,6 +131,8 @@ def cost(Xi,Yi,Thetai,UL,UR):
         Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
         Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
+        
+        # plt.plot([Xs, Xn], [Ys, Yn], color="blue")        
         D=D+ math.sqrt(math.pow((0.5 * r * (UL + UR) * math.cos(Thetan) * dt), 2) + math.pow((0.5 * r * (UL + UR) * math.sin(Thetan) * dt), 2))
         # Xn += 0.5*r * (UL + UR) * math.cos(Thetan) * dt
         # Yn += 0.5*r * (UL + UR) * math.sin(Thetan) * dt
@@ -158,7 +160,7 @@ def one(node, left_speed, right_speed):
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
-    total_cost = rounded_value(total_cost)
+    # total_cost = rounded_value(total_cost)
     passed_node = a_star_node_create(
         total_cost, c2c, parent_node, modified_node)
     return passed_node
