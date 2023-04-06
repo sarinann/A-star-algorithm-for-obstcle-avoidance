@@ -153,14 +153,14 @@ def one(node, left_speed, right_speed):
     parent_node = modified_node[3]
 
     modi_theta = rounded_value(modi_theta)
-    # modi_x = rounded_value(modi_x)
-    # modi_y = rounded_value(modi_y)
+    modi_x = rounded_value(modi_x)
+    modi_y = rounded_value(modi_y)
     modified_child = (modi_x, modi_y, modi_theta)
     c2c = c2c + modified_node[1]
     cost_to_go = dist((modi_x, modi_y), (goal_x, goal_y))
 
     total_cost = c2c + cost_to_go
-    # total_cost = rounded_value(total_cost)
+    total_cost = rounded_value(total_cost)
     passed_node = a_star_node_create(
         total_cost, c2c, parent_node, modified_child)
     return passed_node
@@ -169,7 +169,7 @@ def rounded_value(input):
     # if input % 0.2 != 0:
     #     input = (np.round(input/threshold))*threshold
 
-    input = round(input, 2)
+    input = round(input, 1)
     return input
 
 plotting = {}
