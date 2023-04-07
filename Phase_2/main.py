@@ -22,7 +22,7 @@ start_point_x = input("Enter the x-coordinate of the start point \n")
 start_point_y = input("Enter the y-coordinate of the start point \n")
 start_point_theta = input("Enter the start orientation \n")
 start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-while if_obstacle((start[0], start[1])):
+while if_obstacle((start[0], start[1], total_bloat)):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     start_point_x = input("Enter the x-coordinate of the start point \n")
     start_point_y = input("Enter the y-coordinate of the start point \n")
@@ -33,7 +33,7 @@ goal_point_x = input("Enter the x-coordinate of the goal point \n")
 goal_point_y = input("Enter the y-coordinate of the goal point \n")
 goal_point_orien = input("Enter the goal orientation \n")
 goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-while if_obstacle((goal[0], goal[1])):
+while if_obstacle((goal[0], goal[1], total_bloat)):
     print("These coordinates lie inside the obstacle space. Please enter new values\n")
     goal_point_x = input("Enter the x-coordinate of the goal point \n")
     goal_point_y = input("Enter the y-coordinate of the goal point \n")
