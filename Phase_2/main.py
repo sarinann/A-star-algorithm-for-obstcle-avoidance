@@ -49,7 +49,7 @@ print("______________________________________________________________________")
 ur = int(input("Enter the velocity of right wheel \n"))
 print("______________________________________________________________________")
 
-generated_path, x_visited, y_visited = Astar_algoritm(start, goal)
+generated_path = Astar_algorithm(start, goal, robot_radius, clearance, ul, ur)
 end_time = time.time()
 print("Printing generated path \n")
 print(generated_path)
