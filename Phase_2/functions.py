@@ -3,6 +3,7 @@ from queue import PriorityQueue
 import numpy as np
 import matplotlib.patches as patch
 import matplotlib.pyplot as plt
+from obs import *
 
 angle = 15
 
