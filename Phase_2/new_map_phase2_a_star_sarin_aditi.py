@@ -12,7 +12,7 @@ import math
 
 print("Hi!! \n")
 start_time = time.time()
-threshold = 1.5
+threshold = 0.5
 # robot_radius = int(input("Enter the radius of the robot \n"))
 # print("____________________________________________________________")
 robot_radius = 10
@@ -22,7 +22,7 @@ clearance = 5
 
 # ul = int(input("Enter the velocity of left wheel \n"))
 # print("______________________________________________________________________")
-ul = 30
+ul = 50
 ur = 40
 # ur = int(input("Enter the velocity of right wheel \n"))
 # print("______________________________________________________________________")
@@ -251,7 +251,7 @@ for i in range(len(generated_path)):
     path_x_coord.append(generated_path[i][0])
     path_y_coord.append(generated_path[i][1])
 
-fig, ax = plt.subplots(figsize=(600, 200))
+fig, ax = plt.subplots(figsize=(6, 2))
 Rectangle_Bottom = patch.Rectangle((250, 0), 15, 125, linewidth=1, edgecolor='y', facecolor='y')
 Rectangle_Top = patch.Rectangle((150, 75), 15, 125, linewidth=1, edgecolor='y', facecolor='y')
 Circle = patch.Circle((400, 110), 50, linewidth=1, edgecolor='y', facecolor='y')
@@ -269,28 +269,28 @@ plt.axis([0, 600, 0, 200])
 x_temp = 0
 y_temp = 0
 
-# for i in range(len(x_visited)):
-#     if x_temp == goal[0] and y_temp == goal[1]:
-#         break
-#     if len(x_visited) > 100:
-#         plt.scatter(x_visited[0:100], y_visited[0:100], c='blue', s=1)
-#         plt.pause(0.005)
-#         del x_visited[:100]
-#         del y_visited[:100]
-#     else:
-#         for j in range(len(x_visited)):
-#             plt.scatter(x_visited[j], y_visited[j], c='blue', s=1)
-#             plt.pause(0.005)
-#             x_temp = x_visited[j]
-#             y_temp = y_visited[j]
-#             if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
-#                 break
-            
-for j in range(len(x_visited)):
-            plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=2)
-            plt.pause(0.0005)
-            if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+for i in range(len(x_visited)):
+    if x_temp == goal[0] and y_temp == goal[1]:
+        break
+    if len(x_visited) > 100:
+        plt.scatter(x_visited[0:100], y_visited[0:100], c='blue', s=1)
+        plt.pause(0.005)
+        del x_visited[:100]
+        del y_visited[:100]
+    else:
+        for j in range(len(x_visited)):
+            plt.scatter(x_visited[j], y_visited[j], c='blue', s=1)
+            plt.pause(0.005)
+            x_temp = x_visited[j]
+            y_temp = y_visited[j]
+            if x_visited[j] == goal[0] and y_visited[j] == goal[1]:
                 break
+            
+# for j in range(len(x_visited)):
+#             plt.scatter(x_visited[j] , y_visited[j] , c='red' , s=2)
+#             plt.pause(0.0005)
+#             if x_visited[j] == goal[0] and y_visited[j] == goal[1] :
+#                 break
 
 plt.title("The shortest Path travelled by the robot")
 for i in range(len(path_x_coord)-1):
