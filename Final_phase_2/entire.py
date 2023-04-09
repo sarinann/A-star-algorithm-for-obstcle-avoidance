@@ -113,13 +113,14 @@ print("_________________________________________________________________________
 
 ul = int(input("Enter the velocity of left wheel (preferrable 10 rpm) \n"))
 ur = int(input("Enter the velocity of right wheel (preferrably 20 rpm) \n"))
-
+start = (int(start_point_x), int(start_point_y), int(start_point_theta), ul, ur)
+goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien), ul, ur)
 angle = 20
 
 def rounding_value(x, y, thetas, th=20):
     return round(x, 1), round(y, 1), round(thetas/th) * th
 
-def cost(Xi, Yi, Thetai, UL, UR, total_bloat):
+def cost(Xi, Yi, Thetai, u_left, u_right, UL, UR, total_bloat):
     Thetai = Thetai % 360
     t = 0
     r = 0.038
@@ -153,13 +154,15 @@ def cost(Xi, Yi, Thetai, UL, UR, total_bloat):
     cost = (*rounding_value(Xn, Yn, Thetan, angle), D, UL, UR)
     return cost
 
-def correct_children(current_node, total_bloat, ul, ur):
+def correct_children(current_node, ul, ur, total_bloat):
     children = []
-
+    # ul = current_node[3]
+    # ur = current_node[4]
     actions = [[0, ul], [ul,0], [ul, ul], [0, ur], [ur, 0], [ur, ur], [ul, ur], [ur, ul]]
 
     for action in actions:
         c_x, c_y, c_theta, c_cost_, c_UL, c_UR = cost(*current_node, *action, total_bloat)
+        # c_x, c_y, c_theta, c_cost_, c_UL, c_UR = cost(*current_node, total_bloat)
         
         input = (c_x, c_y, total_bloat)
         if if_obstacle(input):
@@ -167,12 +170,13 @@ def correct_children(current_node, total_bloat, ul, ur):
     
         plt.pause(0.01)
         
-        child = (c_x, c_y, c_theta, c_cost_, c_UL, c_UR)
+        child = (c_x, c_y, c_theta, c_UL, c_UR, c_cost_)
         children.append(child)
     
     return children
 
-def A_star(start_node, goal_node, total_bloat, left_RPM, right_RPM): 
+# def A_star(start_node, goal_node, total_bloat, left_RPM, right_RPM): 
+def A_star(start_node, goal_node, total_bloat, left_RPM, right_RPM):
 
     open_list = deque()
     visited_close_list = {} 
@@ -195,13 +199,14 @@ def A_star(start_node, goal_node, total_bloat, left_RPM, right_RPM):
             goal_node = current_node 
 
             path = [goal_node]
-            while current_node != start_node:
+            while current_node[0]!=start_node[0] or current_node[1]!=start_node[1]:
                 current_node = generated_path[current_node]
                 path.append(current_node)
             return path[::-1]
             
-        children = set(correct_children(current_node, total_bloat, left_RPM, right_RPM)) 
-        for modi_x, modi_y, modi_theta ,modi_cost, ul, ur in children:
+        # children = set(correct_children(current_node, total_bloat, left_RPM, right_RPM)) 
+        children = set(correct_children(current_node, left_RPM, right_RPM, total_bloat)) 
+        for modi_x, modi_y, modi_theta , modi_ul, modi_ur, modi_cost in children:
             dist = math.dist((modi_x, modi_y), goal_node[:2]) 
             if visited_close_list.get((modi_x, modi_y)) == 1: 
                 continue
@@ -209,12 +214,12 @@ def A_star(start_node, goal_node, total_bloat, left_RPM, right_RPM):
             new_cost1 = dist*2.5
             for i, node in enumerate(open_list):
                 if node[1] + node[2] > new_cost + dist*2.5: 
-                    open_list.insert(i,((modi_x, modi_y, modi_theta), new_cost1, new_cost)) 
+                    open_list.insert(i,((modi_x, modi_y, modi_theta, modi_ul, modi_ur), new_cost1, new_cost)) 
                     break
             else:
-                open_list.append(((modi_x, modi_y, modi_theta), new_cost1, new_cost))
+                open_list.append(((modi_x, modi_y, modi_theta, modi_ul, modi_ur), new_cost1, new_cost))
 
-            generated_path[(modi_x, modi_y, modi_theta)] = current_node 
+            generated_path[(modi_x, modi_y, modi_theta, modi_ul, modi_ur)] = current_node 
 
 def shortest_path(path):
 
@@ -224,8 +229,8 @@ def shortest_path(path):
     plt.plot(start_node[0], start_node[1], marker="o", markersize=10, color="red")
     plt.plot(goal_node[0], goal_node[1], marker="o", markersize=10, color="red")
 
-    for i, (x, y, theta) in enumerate(path[:-1]):
-        n_x, n_y, theta = path[i+1]
+    for i, (x, y, theta, ul, ur) in enumerate(path[:-1]):
+        n_x, n_y, theta, u_l, u_r = path[i+1]
         plt.plot([x, n_x], [y, n_y], color="green", linewidth=3)
 
     plt.show(block=False)
