@@ -26,13 +26,12 @@ def map():
 
     fig = plt.figure()
     ax = fig.add_subplot(1, 1, 1)
-    ax.set_xlim([0, 6])
-    ax.set_ylim([0, 2])
-    
+    ax.set_xlim([-0.5, 5.5])
+    ax.set_ylim([-1, 1])    
 
-    circle = patches.Circle((4, 1.1), radius=0.5, fill=True)
-    rectangle_1 = patches.Rectangle((1.5, 0.75), width=0.15, height=1.25, color='blue')
-    rectangle_2 = patches.Rectangle((2.5, 0), width=0.15, height=1.25, color='blue')
+    circle = patches.Circle((3.5, 0.1), radius=0.5, fill=True)
+    rectangle_1 = patches.Rectangle((1, -0.25), width=0.15, height=1.25, color='blue')
+    rectangle_2 = patches.Rectangle((2, -1), width=0.15, height=1.25, color='blue')
 
     ax.add_artist(circle)
     ax.add_patch(rectangle_1)
@@ -45,7 +44,7 @@ def circle(input):
     x = input[0]
     y = input[1]
     total_bloat = input[2]
-    if  (((x-4)**2)+((y-1.1)**2)-((0.5+total_bloat)**2)) <= 0:
+    if  (((x-3.5)**2)+((y-0.1)**2)-((0.5+total_bloat)**2)) <= 0:
         return True
     else:
         return False
@@ -54,7 +53,7 @@ def rectangle_1(input):
     x = input[0]
     y = input[1]
     total_bloat = input[2]
-    if x-(1.5-total_bloat) >= 0 and x-(1.65+total_bloat) <= 0 and y-(0.75-total_bloat) >= 0 and y-(2+total_bloat) <= 0:
+    if x-(1-total_bloat) >= 0 and x-(1.15+total_bloat) <= 0 and y-(-0.25-total_bloat) >= 0 and y-(1+total_bloat) <= 0:
         return True
     else:
         return False
@@ -63,7 +62,7 @@ def rectangle_2(input):
     x = input[0]
     y = input[1]
     total_bloat = input[2]
-    if x-(2.5-total_bloat) >= 0 and x-(2.65+total_bloat) <= 0 and y-(0-total_bloat) >= 0 and y-(1.25+total_bloat) <= 0:
+    if x-(2-total_bloat) >= 0 and x-(2.15+total_bloat) <= 0 and y-(-1-total_bloat) >= 0 and y-(0.25+total_bloat) <= 0:
         return True
     else:
         return False
@@ -72,7 +71,7 @@ def wall(input):
     x = input[0]
     y = input[1]
     total_bloat = input[2]
-    if (x - total_bloat <= 0) or (x + total_bloat >= 6) or (y - total_bloat <= 0) or (y + total_bloat >= 2):
+    if (x - total_bloat <= -0.5) or (x + total_bloat >= 5.5) or (y - total_bloat <= -1) or (y + total_bloat >= 1):
         return True
     else:
         return False
@@ -82,44 +81,48 @@ def if_obstacle(input):
         return True
     else:
         return False
-
-start_point_x = input("Enter the x-coordinate of the start point(1 m) \n")
-start_point_y = input("Enter the y-coordinate of the start point (1 m) \n")
-start_point_theta = input("Enter the start orientation (0 degrees) \n")
+#Taking start coordinates
+print("Choose your start point such that 0.2 <= X <= 0.5 and 0.2 <= Y <= 1.8 <\n")
+start_point_x = input("Enter the x-coordinate of the start point \n")
+start_point_y = input("Enter the y-coordinate of the start point \n")
+start_point_theta = input("Enter the start orientation \n")
 # start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-start = (float(start_point_x), float(start_point_y), float(start_point_theta))
+start = (float(start_point_x)-0.5, float(start_point_y)-1, float(start_point_theta))
 # start = (1, 1, 0)
 while if_obstacle((start[0], start[1], total_bloat)):
-    print("These coordinates lie inside the obstacle space. Please enter new values\n")
-    start_point_x = input("Enter the x-coordinate of the start point(1 m) \n")
-    start_point_y = input("Enter the y-coordinate of the start point (1 m) \n")
-    start_point_theta = input("Enter the start orientation (0 degrees) \n")
+    print("These coordinates lie inside the obstacle space. Please enter new values such that 0.2 <= X <= 0.5 and 0.2 <= Y <= 1.8 \n")
+    start_point_x = input("Enter the x-coordinate of the start point \n")
+    start_point_y = input("Enter the y-coordinate of the start point \n")
+    start_point_theta = input("Enter the start orientation \n")
     # start = (int(start_point_x), int(start_point_y), int(start_point_theta))
-    start = (float(start_point_x), float(start_point_y), float(start_point_theta))
+    start = (float(start_point_x)-0.5, float(start_point_y)-1, float(start_point_theta))
+
+#Taking goal coordinates
 print("_____________________________________________________________________________")
-goal_point_x = input("Enter the x-coordinate of the goal point (5 m) \n")
-goal_point_y = input("Enter the y-coordinate of the goal point (1 m) \n")
-goal_point_orien = input("Enter the goal orientation (0 degrees) \n")
+print("Choose your goal point such that 4.7 <= X <= 5.8 and 0.2 <= Y <= 1.8 \n")
+goal_point_x = input("Enter the x-coordinate of the goal point \n")
+goal_point_y = input("Enter the y-coordinate of the goal point \n")
+goal_point_orien = input("Enter the goal orientation \n")
 # goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-goal = (float(goal_point_x), float(goal_point_y), float(goal_point_orien))
+goal = (float(goal_point_x)-0.5, float(goal_point_y)-1, float(goal_point_orien))
 
 # goal = (5, 1, 0)
 while if_obstacle((goal[0], goal[1], total_bloat)):
-    print("These coordinates lie inside the obstacle space. Please enter new values\n")
-    goal_point_x = input("Enter the x-coordinate of the goal point (5 m) \n")
-    goal_point_y = input("Enter the y-coordinate of the goal point (1 m) \n")
-    goal_point_orien = input("Enter the goal orientation (0 degrees)\n")
+    print("These coordinates lie inside the obstacle space. Please enter new values such that 4.7 <= X <= 5.8 and 0.2 <= Y <= 1.8 \n")
+    goal_point_x = input("Enter the x-coordinate of the goal point \n")
+    goal_point_y = input("Enter the y-coordinate of the goal point \n")
+    goal_point_orien = input("Enter the goal orientation \n")
     # goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien))
-    goal = (float(goal_point_x), float(goal_point_y), float(goal_point_orien))
+    goal = (float(goal_point_x)-0.5, float(goal_point_y)-1, float(goal_point_orien))
 print("_____________________________________________________________________________")
 
 
-ul = int(input("Enter the velocity of left wheel (preferrable 10 rpm) \n"))
-ur = int(input("Enter the velocity of right wheel (preferrably 20 rpm) \n"))
+ul = int(input("Enter the velocity of left wheel (preferrable 60 to 70 rpm) \n"))
+ur = int(input("Enter the velocity of right wheel (preferrably 120 to 140 rpm) \n"))
 ul = ul*0.1047
 ur = ur*0.1047
-start = (float(start_point_x), float(start_point_y), float(start_point_theta), ul, ur)
-goal = (float(goal_point_x), float(goal_point_y), float(goal_point_orien), ul, ur)
+start = (float(start_point_x)-0.5, float(start_point_y)-1, float(start_point_theta), ul, ur)
+goal = (float(goal_point_x)-0.5, float(goal_point_y)-1, float(goal_point_orien), ul, ur)
 angle = 20
 
 def rounding_value(x, y, thetas, th=20):
@@ -249,3 +252,5 @@ map()
 generated_path = A_star(start, goal, total_bloat, ul, ur)
 print(generated_path)
 shortest_path(generated_path)
+path_array = np.array(generated_path)
+np.savetxt('generated_path.txt', path_array, delimiter='\t')
