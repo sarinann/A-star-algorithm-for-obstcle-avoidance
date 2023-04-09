@@ -52,7 +52,7 @@ Part 02
                 -roslaunch ros_package project3_phase2_code.launch
 
 
-GitHub Link: https://github.com/sarinann/A-star-algorithm-for-obstcle-avoidance.git
+GitHub Link: https://github.com/sarinann/https---github.com-sarinann-A-star-algorithm-for-obstcle-avoidance.git
 
 
 (Both the 2D and 3D visualization videos can be found here)
