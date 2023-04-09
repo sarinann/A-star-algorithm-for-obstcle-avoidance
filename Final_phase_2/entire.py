@@ -113,6 +113,8 @@ print("_________________________________________________________________________
 
 ul = int(input("Enter the velocity of left wheel (preferrable 10 rpm) \n"))
 ur = int(input("Enter the velocity of right wheel (preferrably 20 rpm) \n"))
+ul = ul*0.1047
+ur = ur*0.1047
 start = (int(start_point_x), int(start_point_y), int(start_point_theta), ul, ur)
 goal = (int(goal_point_x), int(goal_point_y), int(goal_point_orien), ul, ur)
 angle = 20
@@ -123,8 +125,8 @@ def rounding_value(x, y, thetas, th=20):
 def cost(Xi, Yi, Thetai, u_left, u_right, UL, UR, total_bloat):
     Thetai = Thetai % 360
     t = 0
-    r = 0.038
-    L = 0.354
+    r = 0.033
+    L = 0.160
     dt = 0.1
     Xn = Xi
     Yn = Yi
@@ -139,12 +141,14 @@ def cost(Xi, Yi, Thetai, u_left, u_right, UL, UR, total_bloat):
         
         input = (Xn, Yn, total_bloat)
         if if_obstacle(input):
-            break
-        
+            break       
         
         Xn += 0.5 * r * (UL + UR) * math.cos(Thetan) * dt
         Yn += 0.5 * r * (UL + UR) * math.sin(Thetan) * dt
         Thetan += (r / L) * (UR - UL) * dt
+        # Xn += 0.5 * r * (UL*0.1047 + UR*0.1047) * math.cos(Thetan) * dt
+        # Yn += 0.5 * r * (UL*0.1047 + UR*0.1047) * math.sin(Thetan) * dt
+        # Thetan += (r / L) * (UR*0.1047 - UL*0.1047) * dt
         
         plt.plot([Xs, Xn], [Ys, Yn], color="blue")
 
