@@ -4,6 +4,7 @@ import matplotlib.patches as patches
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+import os
 
 plt.ion()
 
@@ -252,5 +253,7 @@ map()
 generated_path = A_star(start, goal, total_bloat, ul, ur)
 print(generated_path)
 shortest_path(generated_path)
+
+
 path_array = np.array(generated_path)
 np.savetxt('generated_path.txt', path_array, delimiter='\t')
